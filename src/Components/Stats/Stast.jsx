@@ -57,7 +57,7 @@ const Stats = () => {
             transition={{ duration: 0.6, delay: id * 0.1 }}
             className="rounded-xl shadow-lg p-8 flex flex-col items-center
              transition-transform transform hover:-translate-y-2 hover:shadow-2xl
-                       bg-gradient-to-tr from-[#ffffffa5] to-[#dfcb844a]"
+                       bg-gradient-to-tr from-[#ffffff] to-[#dfcb842b]"
           >
             {icon}
             <motion.span

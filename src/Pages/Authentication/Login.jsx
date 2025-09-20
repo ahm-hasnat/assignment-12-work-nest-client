@@ -1,11 +1,104 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useLocation, useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import useAuth from "../../Hooks/useAuth";
+import SocialLogin from "./SocialLogin";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
-    return (
-        <div>
-            
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { signIn } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/";
+
+  const onSubmit = async (data) => {
+    try {
+      await signIn(data.email, data.password);
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Redirecting...",
+        timer: 1500,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      }).then(() => navigate(from));
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }
+  };
+
+  return (
+    <div className="card bg-base-100 w-full max-w-md mx-auto shadow-2xl mt-24">
+      <div className="card-body">
+        <h1 className="text-3xl font-bold text-center mb-4">Login</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Email */}
+          <label className="label">Email</label>
+          <input
+            type="email"
+            {...register("email", { required: true })}
+            className="input input-bordered w-full"
+            placeholder="Email"
+          />
+          {errors.email && (
+            <p className="text-red-500">Email is required</p>
+          )}
+
+          {/* Password */}
+          <label className="label">Password</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              {...register("password", { required: true })}
+              className="input input-bordered w-full pr-10"
+              placeholder="Password"
+            />
+            <span
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </span>
+          </div>
+          {errors.password && (
+            <p className="text-red-500">Password is required</p>
+          )}
+
+          <button
+            type="submit"
+            className="btn bg-[#29d409] hover:bg-[#f8b02f] text-white w-full mt-4"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="mt-4 text-center">
+          <small>
+            Don't have an account?{" "}
+            <Link className="text-blue-500" to="/register">
+              Register
+            </Link>
+          </small>
+        </p>
+
+        {/* Social login buttons */}
+        <div className="mt-4">
+          <SocialLogin />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Login;
