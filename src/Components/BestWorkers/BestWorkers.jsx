@@ -1,0 +1,84 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { FaCoins, FaUserTie, FaCrown } from "react-icons/fa";
+import { motion } from "framer-motion";
+import Confetti from "react-confetti";
+import { useState, useEffect } from "react";
+
+const BestWorkers = () => {
+  const { data: workers = [], isLoading } = useQuery({
+    queryKey: ["bestWorkers"],
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:5000/best-workers");
+      return res.data;
+    },
+  });
+
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    if (workers.length > 0) {
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 3000); // 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [workers]);
+
+  if (isLoading)
+    return <p className="text-center text-gray-500 mt-16">Loading...</p>;
+
+  return (
+    <section className="py-10 px-5 max-w-6xl mx-auto relative">
+      {/* Confetti for top worker */}
+      {showConfetti && <Confetti recycle={false} numberOfPieces={150} />}
+
+      <h2 className="text-3xl font-bold text-center mb-2 primary mt-5">
+        Our Best Workers
+      </h2>
+      <p className="text-center secondary mb-12">
+        Meet the top workers who are making the most impact!
+      </p>
+
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        {workers.map((worker, index) => (
+          <motion.div
+            key={worker._id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={`relative bg-gradient-to-t from-green-100 to-white 
+                rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 
+                transition-all duration-300 p-5 flex flex-col items-center ${
+                  index === 0 ? "border-3 border-green-400" : ""
+                }`}
+          >
+            {/* Top Badge */}
+            {index < 3 && (
+              <div className="absolute -top-6 right-3 bg-[#f8b02f] rounded-full px-2 py-2.5 shadow-lg text-white flex items-center justify-center">
+                <FaCrown className="mr-1" />
+                <span className="font-bold">{index + 1}</span>
+              </div>
+            )}
+
+            <div className="relative w-28 h-28 mb-4">
+              <img
+                src={worker.photoURL}
+                alt={worker.name}
+                className="rounded-full w-full h-full object-cover shadow-md"
+              />
+              <FaUserTie className="absolute bottom-0 right-0 text-green-500 bg-white
+               rounded-full p-1 shadow-md" />
+            </div>
+
+            <h3 className="font-semibold text-xl mb-1">{worker.name}</h3>
+            <p className="flex items-center text-[#f8b02f] font-bold">
+              <FaCoins className="mr-2" /> {worker.coins} Coins
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default BestWorkers;
