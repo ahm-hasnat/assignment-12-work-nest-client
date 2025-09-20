@@ -3,176 +3,163 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import useAxios from "../../Hooks/useAxios";
-import SocialLogin from "./SocialLogin";
 import useAuth from "../../Hooks/useAuth";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import SocialLogin from "./SocialLogin";
 import Swal from "sweetalert2";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Eye icons
 
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm();
   const { createUser, updateUserProfile } = useAuth();
   const [profilePic, setProfilePic] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // toggle state
+  
+  const [showPassword, setShowPassword] = useState(false);
   const axiosInstance = useAxios();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
 
-  const passwordValue = watch("password", "");
+  // Submit Handler
+  const onSubmit = (data) => {
+    createUser(data.email, data.password)
+      .then(async (result) => {
+        // default coins by role
+        const defaultCoins = data.role === "worker" ? 10 : 50;
 
-  // Upload image to ImgBB
+        // save user in DB
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+          role: data.role || "user",
+          photoURL: profilePic,
+          coins: defaultCoins,
+          created_at: new Date().toISOString(),
+          last_log_in: new Date().toISOString(),
+        };
+
+        // Post to allUsers collection
+        await axiosInstance.post("/allUsers", userInfo);
+
+        // If role is worker, also save in workers collection
+        if (data.role === "worker") {
+          await axiosInstance.post("/allWorkers", userInfo);
+        }
+
+        // Update Firebase profile
+        const userProfile = {
+          displayName: data.name,
+          photoURL: profilePic,
+        };
+        updateUserProfile(userProfile)
+          .then(() => {
+             Swal.fire({
+          icon: "success",
+          title: "Account Created!",
+          text: "Redirecting...",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).then(() => navigate(from));
+          })
+          
+      })
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          Swal.fire({
+            icon: "info",
+            title: "User Already Exists",
+            text: "Redirecting to login page...",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          })
+          .then(() => navigate("/auth/login"))
+        }
+      });
+  };
+
+  // Image Upload
   const handleImageUpload = async (e) => {
+   
     const image = e.target.files[0];
+   
     if (!image) return;
-    setUploading(true);
 
     const formData = new FormData();
     formData.append("image", image);
 
-    try {
-      const imagUploadUrl = `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_IMAGE_UPLOAD_KEY
-      }`;
-      const res = await axios.post(imagUploadUrl, formData);
-      setProfilePic(res.data.data.url);
-    } catch (error) {
-      console.error("Image upload failed", error);
-      Swal.fire({
-        icon: "error",
-        title: "Upload Failed",
-        text: "Could not upload profile picture",
-        timer: 2000,
-        timerProgressBar: true,
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  // Password strength check
-  const validatePassword = (password) => {
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{};':"\\|,.<>/?]).{6,}$/;
-    return regex.test(password);
-  };
-
-  const onSubmit = async (data) => {
-    if (!profilePic) {
-      Swal.fire({
-        icon: "warning",
-        title: "Profile Picture Required",
-        text: "Please upload a profile picture first",
-        timer: 2000,
-        timerProgressBar: true,
-      });
-      return;
-    }
-
-    if (!validatePassword(data.password)) return;
-
-    try {
-      const result = await createUser(data.email, data.password);
-
-      const userInfo = {
-        name: data.name,
-        email: data.email,
-        role: data.role || "user",
-        photoURL: profilePic,
-        created_at: new Date().toISOString(),
-        last_log_in: new Date().toISOString(),
-      };
-
-      await axiosInstance.post("/allUsers", userInfo);
-
-      await updateUserProfile({
-        displayName: data.name,
-        photoURL: profilePic,
-      });
-
-      Swal.fire({
-        icon: "success",
-        title: "Account Created!",
-        text: "Redirecting...",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      }).then(() => navigate(from));
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        Swal.fire({
-          icon: "info",
-          title: "User Already Exists",
-          text: "Redirecting to login page...",
-          timer: 2000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-        }).then(() => navigate("/login"));
-      } else {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed",
-          text: error.message,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      }
-    }
+    const imagUploadUrl = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_IMAGE_UPLOAD_KEY
+    }`;
+    const res = await axios.post(imagUploadUrl, formData);
+      
+    setProfilePic(res.data.data.url);
   };
 
   return (
     <div className="card bg-base-100 w-full max-w-lg mx-auto shadow-2xl mt-24">
       <div className="card-body">
         <h1 className="text-3xl font-bold text-center mb-4">Create Account</h1>
+
         <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset className="fieldset space-y-1">
+          <fieldset className="fieldset space-y-2">
             {/* Name */}
-            <label className="label primary">Your Name</label>
+            <label className="label">Your Name</label>
             <input
               type="text"
               {...register("name", { required: true })}
               className="input input-bordered w-full"
               placeholder="Your Name"
             />
-            {errors.name && <p className="text-red-500">Name is required</p>}
+            {errors.name && (
+              <p className="text-red-500">Name is required</p>
+            )}
 
             {/* Profile Picture */}
-            <label className="label primary">Profile Picture</label>
+            <label className="label">Profile Picture</label>
             <input
               type="file"
               onChange={handleImageUpload}
               className="file-input file-input-bordered w-full"
               required
             />
+           
 
             {/* Email */}
-            <label className="label primary">Email</label>
+            <label className="label">Email</label>
             <input
               type="email"
               {...register("email", { required: true })}
               className="input input-bordered w-full"
               placeholder="Email"
             />
-            {errors.email && <p className="text-red-500">Email is required</p>}
+            {errors.email && (
+              <p className="text-red-500">Email is required</p>
+            )}
 
             {/* Password */}
-            <label className="label primary">Password</label>
+            <label className="label">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                {...register("password", { required: true, minLength: 6 })}
+                {...register("password", {
+                  required: true,
+                  minLength: 6,
+                  validate: (value) =>
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(
+                      value
+                    ) ||
+                    "Password must include uppercase, lowercase, number, and special character",
+                })}
                 className="input input-bordered w-full pr-10"
                 placeholder="Password"
               />
               <span
-                className="absolute right-3 top-1/2 -translate-y-1/2 
-                cursor-pointer text-gray-600 text-lg"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -186,15 +173,12 @@ const Register = () => {
                 Password must be at least 6 characters
               </p>
             )}
-            {passwordValue && !validatePassword(passwordValue) && (
-              <p className="text-red-500">
-                Password must include uppercase, lowercase, number, and special
-                character
-              </p>
+            {errors.password?.type === "validate" && (
+              <p className="text-red-500">{errors.password.message}</p>
             )}
 
-            {/* Role Selection */}
-            <label className="label primary">Select Role</label>
+            {/* Role */}
+            <label className="label">Select Role</label>
             <select
               {...register("role", { required: true })}
               className="select select-bordered w-full"
@@ -206,11 +190,9 @@ const Register = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="btn bg-[#29d409] hover:bg-[#f8b02f]
-               text-white w-full mt-4"
-              disabled={uploading}
+              className="btn bg-[#29d409] hover:bg-[#f8b02f] text-white w-full mt-4"
             >
-              {uploading ? "Uploading..." : "Register"}
+              Register
             </button>
           </fieldset>
 
@@ -223,8 +205,7 @@ const Register = () => {
             </small>
           </p>
         </form>
-
-        <SocialLogin />
+         <SocialLogin></SocialLogin>
       </div>
     </div>
   );
