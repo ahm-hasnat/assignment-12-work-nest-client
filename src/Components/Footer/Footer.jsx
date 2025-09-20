@@ -20,7 +20,7 @@ const Footer = () => {
          md:text-left">
           <div className="flex items-end gap-2">
             <Logo />
-            <h1 className="text-xl font-bold -ml-3 text-white">WorkNest</h1>
+            <h1 className="text-xl font-bold -ml-5 text-white">WorkNest</h1>
           </div>
           <p className="text-sm mt-2">Providing reliable service since 1992</p>
         </aside>

@@ -4,12 +4,14 @@ import { FaCoins, FaUserTie, FaCrown } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { useState, useEffect } from "react";
+import useAxios from "../../Hooks/useAxios";
 
 const BestWorkers = () => {
+    const axiosInstance = useAxios();
   const { data: workers = [], isLoading } = useQuery({
     queryKey: ["bestWorkers"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/best-workers");
+      const res = await axiosInstance.get("/best-workers");
       return res.data;
     },
   });

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import Logo from "../Shared/logo";
 import { MdArrowOutward } from "react-icons/md";
 
@@ -88,8 +88,8 @@ const notUserNav = () => {
           </ul>
         </div>
         <div className="flex gap-3">
-          <button className="btn btn2 btn-outline btn-success">Login</button>
-          <button className="btn btn2 btn-outline btn-success">Register</button>
+          <Link to='/auth/login' className="btn btn2 btn-outline btn-success">Login</Link>
+          <Link to='/auth/register' className="btn btn2 btn-outline btn-success">Register</Link>
           <a
             href="https://github.com/ahm-hasnat/assignment-12-work-nest-client"
             target="_blank"
