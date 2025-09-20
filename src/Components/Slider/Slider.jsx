@@ -31,13 +31,13 @@ const slides = [
 
 const Slider = () => {
   return (
-    <div className="max-w-full mt-20">
+    <div className="max-w-full mt-18">
       <Swiper
         modules={[Autoplay, Pagination, Navigation]}
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         navigation={false}
       >
@@ -71,7 +71,7 @@ const Slider = () => {
                     }}
                   />
                 </h1>
-                <p className="text-lg md:text-xl font-body mt-10">
+                <p className="text-lg text-gray-300 font-body mt-5">
                   {slide.subHeading}
                 </p>
               </div>

@@ -4,6 +4,7 @@ import BestWorkers from '../../../Components/BestWorkers/BestWorkers';
 import Testimonials from '../../../Components/Testimonials/Testimonials';
 import FAQ from '../../../Components/FAQ/FAQ';
 import Stats from '../../../Components/Stats/Stast';
+import Blog from '../../../Components/Blogs/Blog';
 
 const Home = () => {
     return (
@@ -11,8 +12,9 @@ const Home = () => {
             <Slider></Slider>
             <BestWorkers></BestWorkers>
             <Testimonials></Testimonials>
-            <FAQ></FAQ>
-            <Stats></Stats>
+            <Blog></Blog>
+             <FAQ></FAQ>
+              <Stats></Stats>
         </div>
     );
 };

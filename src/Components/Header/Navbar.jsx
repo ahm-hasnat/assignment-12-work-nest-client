@@ -13,18 +13,31 @@ const notUserNav = () => {
       <li>
         <NavLink className={activeLink} to="/">Home</NavLink>
       </li>
+      
       <li>
-        <NavLink className={activeLink} to="/about">About Us</NavLink>
+         <button
+    onClick={() => {
+      const faqSection = document.getElementById("faq");
+      if (faqSection) {
+        const navbarHeight = document.querySelector(".navbar").offsetHeight;
+        const topPos = faqSection.offsetTop - navbarHeight - 10; 
+        window.scrollTo({ top: topPos, behavior: "smooth" });
+      }
+    }}
+    className="hover:text-[#29d409]"
+  >
+    FAQ
+  </button>
       </li>
       <li>
-        <NavLink className={activeLink} to="/faq">FAQ</NavLink>
+        <NavLink className={activeLink} to="/about">About Us</NavLink>
       </li>
     </>
   );
 };
 
   return (
-    <div className="navbar bg-base-100 shadow-sm px-10 fixed top-0 z-30">
+    <div className="navbar bg-base-100 shadow-sm py-1 px-10 fixed top-0 z-30">
       <div className="navbar-start">
         <div className="dropdown">
           <div
@@ -59,8 +72,11 @@ const notUserNav = () => {
             {notUserNav()}
           </ul>
         </div>
-
-        <Logo></Logo>
+    <div className='flex items-end'>
+   <Logo></Logo>
+        <a className=" -ml-3 font-bold text-2xl p-0 primary">WorkNest</a>
+    </div>
+       
       </div>
 
       <div className="navbar-end w-full">

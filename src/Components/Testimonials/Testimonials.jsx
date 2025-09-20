@@ -40,7 +40,7 @@ const testimonials = [
 const Testimonials = () => {
   return (
     <section className="py-12 mb-8 text-center bg-gray-50">
-      <h1 className="text-4xl font-bold mb-12 primary">What Our Users Say</h1>
+      <h1 className="text-3xl font-bold mb-12 primary">What Our Users Say</h1>
 
       <Swiper
         modules={[Navigation, Autoplay]}
