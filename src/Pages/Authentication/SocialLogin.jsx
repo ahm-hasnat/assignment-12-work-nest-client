@@ -18,8 +18,12 @@ const SocialLogin = () => {
                 console.log(result.user);
                 // update userinfo in the database
                 const userInfo = {
+                    name:user.displayName,
                     email: user.email,
-                    role: 'user', // default role
+                    provider: "google",
+                    photoURL:user.photoURL,
+                    role: 'worker', // default role
+                    coins : 10,
                     created_at: new Date().toISOString(),
                     last_log_in: new Date().toISOString()
                 }

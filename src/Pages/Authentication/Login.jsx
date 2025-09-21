@@ -5,17 +5,39 @@ import Swal from "sweetalert2";
 import useAuth from "../../Hooks/useAuth";
 import SocialLogin from "./SocialLogin";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import useAxios from "../../Hooks/useAxios";
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { signIn } = useAuth();
+  const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
 
-  const onSubmit = async (data) => {
+   const onSubmit = async (data) => {
     try {
+      // 1️⃣ Check if user exists in allUsers collection
+      const res = await axiosInstance.get(`/allUsers?email=${data.email}`);
+      const user = res.data[0];
+      console.log(res);
+    console.log(user);
+
+      if (!user || user.provider === "google") {
+        Swal.fire({
+          icon: "info",
+          title: "User Not Registered",
+          text: "Please register first",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+        return;
+      }
+      
+
+      // 2️⃣ Attempt Firebase sign-in
       await signIn(data.email, data.password);
 
       Swal.fire({
@@ -26,14 +48,17 @@ const Login = () => {
         timerProgressBar: true,
         showConfirmButton: false,
       }).then(() => navigate(from));
+
     } catch (error) {
       console.error(error);
+      // Firebase failed sign-in (wrong password)
       Swal.fire({
         icon: "error",
-        title: "Login Failed",
-        text: error.message,
+        title: "Invalid Password",
+        text: "The password you entered is incorrect",
         timer: 2000,
         timerProgressBar: true,
+        showConfirmButton: false,
       });
     }
   };
@@ -44,11 +69,11 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-center mb-4">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email */}
-          <label className="label">Email</label>
+          <label className="label mb-2">Email</label>
           <input
             type="email"
             {...register("email", { required: true })}
-            className="input input-bordered w-full"
+            className="input input-bordered w-full mb-2"
             placeholder="Email"
           />
           {errors.email && (
@@ -56,7 +81,7 @@ const Login = () => {
           )}
 
           {/* Password */}
-          <label className="label">Password</label>
+          <label className="label mb-2">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}

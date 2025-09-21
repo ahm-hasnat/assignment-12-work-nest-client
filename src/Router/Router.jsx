@@ -5,11 +5,13 @@ import Home from '../Pages/Home/Home/Home';
 import Auth from '../Layouts/Auth';
 import Register from '../Pages/Authentication/Register';
 import Login from '../Pages/Authentication/Login';
+import Error from '../Pages/Error/Error';
 
 export const Router = createBrowserRouter([
   {
     path: "/",
     Component : Root,
+    errorElement:<Error></Error>,
     children:[
         {
             index: true,
@@ -32,5 +34,9 @@ export const Router = createBrowserRouter([
       Component: Login,
     }
   ]
+  },
+  {
+    path:'/',
+    Component:Error,
   }
 ]);
