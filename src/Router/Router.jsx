@@ -6,6 +6,8 @@ import Auth from '../Layouts/Auth';
 import Register from '../Pages/Authentication/Register';
 import Login from '../Pages/Authentication/Login';
 import Error from '../Pages/Error/Error';
+import DashBoardLayout from '../Layouts/DashBoardLayout';
+import DashHome from '../Pages/DashBoard/DashBoardHome/DashHome';
 
 export const Router = createBrowserRouter([
   {
@@ -34,6 +36,18 @@ export const Router = createBrowserRouter([
       Component: Login,
     }
   ]
+  },
+  {
+    path:'/dashboard',
+    element:<DashBoardLayout></DashBoardLayout>,
+    children:[
+      {
+        index:true,
+        path: '/dashboard',
+        element:<DashHome></DashHome>,
+
+      }
+    ]
   },
   {
     path:'/',

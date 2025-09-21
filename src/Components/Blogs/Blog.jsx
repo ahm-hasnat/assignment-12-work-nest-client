@@ -36,7 +36,7 @@ const Blog = () => {
 
       <div className="flex flex-col space-y-12">
         {blogPosts.map((post, index) => {
-          const isEven = index % 2 === 0;
+          
           return (
             <motion.div
               key={post.id}
@@ -44,11 +44,12 @@ const Blog = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className={`flex flex-col md:flex-row items-center gap-6 p-6 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50
-              ${!isEven ? "md:flex-row-reverse" : ""}`}
+              className={`flex flex-col md:flex-row items-center gap-16 p-8 pl-10
+                rounded-xl bg-gradient-to-br from-purple-50 to-pink-50
+              `}
             >
               {/* Blog Image */}
-              <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32
+              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36
                rounded-full border-4 border-[#373c36] overflow-hidden">
                 <img
                   src={post.image}

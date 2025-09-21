@@ -26,7 +26,7 @@ const Login = () => {
 
       if (!user || user.provider === "google") {
         Swal.fire({
-          icon: "info",
+          icon: "info", 
           title: "User Not Registered",
           text: "Please register first",
           timer: 2000,
