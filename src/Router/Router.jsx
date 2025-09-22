@@ -9,6 +9,8 @@ import Error from '../Pages/Error/Error';
 import DashBoardLayout from '../Layouts/DashBoardLayout';
 import DashHome from '../Pages/DashBoard/DashBoardHome/DashHome';
 import AddTask from '../Pages/DashBoard/BuyerDash/AddTask';
+import PurchaseCoin from '../Pages/DashBoard/BuyerDash/PurchaseCoin';
+import MyTasks from '../Pages/DashBoard/BuyerDash/MyTasks';
 
 export const Router = createBrowserRouter([
   {
@@ -51,6 +53,14 @@ export const Router = createBrowserRouter([
       {
         path:'/dashboard/add-task',
         element:<AddTask></AddTask>,
+      },
+      {
+        path:'/dashboard/my-tasks',
+        element:<MyTasks></MyTasks>
+      },
+      {
+        path:'/dashboard/purchase-coin',
+        element: <PurchaseCoin></PurchaseCoin>
       }
     ]
   },
