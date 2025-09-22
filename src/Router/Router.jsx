@@ -8,6 +8,7 @@ import Login from '../Pages/Authentication/Login';
 import Error from '../Pages/Error/Error';
 import DashBoardLayout from '../Layouts/DashBoardLayout';
 import DashHome from '../Pages/DashBoard/DashBoardHome/DashHome';
+import AddTask from '../Pages/DashBoard/BuyerDash/AddTask';
 
 export const Router = createBrowserRouter([
   {
@@ -43,9 +44,13 @@ export const Router = createBrowserRouter([
     children:[
       {
         index:true,
-        path: '/dashboard',
+        path: '/dashboard/home',
         element:<DashHome></DashHome>,
 
+      },
+      {
+        path:'/dashboard/add-task',
+        element:<AddTask></AddTask>,
       }
     ]
   },

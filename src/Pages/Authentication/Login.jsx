@@ -19,10 +19,11 @@ const Login = () => {
    const onSubmit = async (data) => {
     try {
       // 1️⃣ Check if user exists in allUsers collection
-      const res = await axiosInstance.get(`/allUsers?email=${data.email}`);
-      const user = res.data[0];
+      const res = await axiosInstance.get(`/allUsers/${data.email}`);
+
+      const user = res.data;
       console.log(res);
-    console.log(user);
+   
 
       if (!user || user.provider === "google") {
         Swal.fire({
@@ -89,8 +90,9 @@ const Login = () => {
               className="input input-bordered w-full pr-10"
               placeholder="Password"
             />
+            <p className="text-xs text-gray-500 font-light hover:text-blue-500 hover:underline cursor-pointer">Forgot password?</p>
             <span
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
+              className="absolute right-3 top-5 -translate-y-1/2 cursor-pointer text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -111,7 +113,7 @@ const Login = () => {
         <p className="mt-4 text-center">
           <small>
             Don't have an account?{" "}
-            <Link className="text-blue-500" to="/register">
+            <Link className="text-blue-500" to="/auth/register">
               Register
             </Link>
           </small>

@@ -27,7 +27,7 @@ const Sidebar = () => {
     >
       <h2 className="text-xl font-bold primary mb-3">Dashboard</h2>
       <nav className="flex flex-col space-y-3 ml-5">
-        <NavLink to="/dashboard" className={activeLink}>
+        <NavLink to="/dashboard/home" className={activeLink}>
           <div className="flex items-center gap-2">
             <Home className="w-5 h-5" />
             <span>Home</span>
@@ -60,6 +60,7 @@ const Sidebar = () => {
         )}
 
         {/* buyer */}
+        
         {!roleLoading && role === "buyer" && (
           <>
             <NavLink to="/dashboard/add-task" className={activeLink}>

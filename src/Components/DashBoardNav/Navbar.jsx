@@ -1,29 +1,32 @@
 // src/Components/DashBoardNav/Navbar.jsx
 import React from "react";
 import { FaBell } from "react-icons/fa";
-import useAuth from "../../Hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../Hooks/useAxios";
 import Logo from "../Shared/logo";
 import { Link } from "react-router";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
 
 const Navbar = () => {
   const { user } = useAuth();
-  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
 
+  
   // Fetch user details including coins, role
   const { data: userData = {} } = useQuery({
     queryKey: ["userData", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosInstance.get(`/allUsers?email=${user.email}`);
-      return res.data[0]; // assuming API returns array
+      const res = await axiosSecure.get(`/allUsers/${user.email}`);
+      return res.data;
+      // assuming API returns array
     },
+    
   });
-
+console.log(userData);
   return (
     <div
-      className="flex justify-between items-center bg-white shadow-xs px-6 py-1 
+      className="flex justify-between items-center bg-white shadow-xs px-10 py-1 
     sticky top-0 z-20"
     >
       <Link to="/">
