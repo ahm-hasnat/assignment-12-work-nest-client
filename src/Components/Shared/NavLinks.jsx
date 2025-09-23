@@ -13,7 +13,7 @@ const NavLinks = () => {
         </NavLink>
       </li>
       <li>
-        <NavLink to="/dashboard/home" className={activeLink}>
+        <NavLink to="/dashboard" className={activeLink}>
           Dashboard
         </NavLink>
       </li>

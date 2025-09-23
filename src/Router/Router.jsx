@@ -11,6 +11,8 @@ import DashHome from '../Pages/DashBoard/DashBoardHome/DashHome';
 import AddTask from '../Pages/DashBoard/BuyerDash/AddTask';
 import PurchaseCoin from '../Pages/DashBoard/BuyerDash/PurchaseCoin';
 import MyTasks from '../Pages/DashBoard/BuyerDash/MyTasks';
+import Payment from '../Pages/DashBoard/BuyerDash/Payment';
+import PaymentHistory from '../Pages/DashBoard/BuyerDash/PaymentHistory';
 
 export const Router = createBrowserRouter([
   {
@@ -46,7 +48,7 @@ export const Router = createBrowserRouter([
     children:[
       {
         index:true,
-        path: '/dashboard/home',
+        path: '/dashboard',
         element:<DashHome></DashHome>,
 
       },
@@ -61,6 +63,14 @@ export const Router = createBrowserRouter([
       {
         path:'/dashboard/purchase-coin',
         element: <PurchaseCoin></PurchaseCoin>
+      },{
+
+        path : '/dashboard/payment/:p/:n/:c',
+        element: <Payment></Payment>
+      },
+      {
+        path:'/dashboard/payment-history',
+        element:<PaymentHistory></PaymentHistory>,
       }
     ]
   },
