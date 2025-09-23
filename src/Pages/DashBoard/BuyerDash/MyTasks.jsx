@@ -22,7 +22,7 @@ const MyTasks = () => {
     queryFn: async () => {
       const res = await axiosSecure.get("/allTasks");
       return res.data
-        .filter((task) => task.added_By === user.email)
+        .filter((task) => task.buyer_email === user.email)
         .sort(
           (a, b) => new Date(b.completion_date) - new Date(a.completion_date)
         );

@@ -16,7 +16,7 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
     },
   });
 
-  // Populate form with existing task
+  // Populate form with existing task data
   useEffect(() => {
     if (task) {
       reset({
@@ -33,40 +33,20 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
       const res = await axiosSecure.put(`/allTasks/${updatedTask.id}`, updatedTask);
       return res.data;
     },
-    onMutate: async (variables) => {
-      // Optimistic update: immediately update tasks in cache
-      queryClient.setQueryData(queryKey, (old = []) =>
-        old.map((t) =>
-          t._id === variables.id
-            ? {
-                ...t,
-                task_title: variables.task_title,
-                task_detail: variables.task_detail,
-                required_workers: variables.required_workers,
-                total_payable_amount: variables.totalPayable,
-              }
-            : t
-        )
-      );
-    },
     onSuccess: () => {
-      // Refetch tasks to sync with backend
+      // Automatically refetch tasks to sync cache
       queryClient.invalidateQueries({ queryKey });
       Swal.fire("Success", "Task updated successfully", "success");
       onClose();
     },
     onError: (err) => {
-    // Show backend error message via SweetAlert
-    Swal.fire("Error", err.response?.data?.message || "Failed to update task", "error");
-    return;
-  },
-  
+      Swal.fire("Error", err.response?.data?.message || "Failed to update task", "error");
+    },
   });
 
   const onSubmit = (data) => {
     if (!task?._id) return Swal.fire("Error", "Task ID is missing!", "error");
 
-    // Calculate total payable amount on the frontend
     const totalPayable = Number(data.required_workers) * Number(task.payable_amount || 0);
 
     updateMutation.mutate({
@@ -77,6 +57,7 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
       totalPayable,
     });
   };
+
   return (
     <>
       <input
@@ -140,10 +121,6 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
                 </p>
               )}
             </div>
-
-           
-
-            
 
             <div className="modal-action">
               <button

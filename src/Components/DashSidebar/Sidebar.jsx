@@ -36,7 +36,7 @@ const Sidebar = () => {
 
         {!roleLoading && role === "worker" && (
           <>
-            <NavLink to="/dashboard/tasks" className={activeLink}>
+            <NavLink to="/dashboard/all-task" className={activeLink}>
               <div className="flex items-center gap-2">
                 <ListTodo className="w-5 h-5" />
                 <span>TaskLists</span>
