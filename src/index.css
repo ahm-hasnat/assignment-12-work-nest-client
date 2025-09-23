@@ -25,6 +25,12 @@ body{
     background: #f8b02f; 
     color: black;
 }
+.btn1:disabled {
+    background: #cccccc; /* gray background for disabled state */
+    color: #666666;      /* gray text for disabled */
+    cursor: not-allowed; /* shows the not-allowed cursor */
+    opacity: 0.7;        /* slightly faded */
+}
 
 .primary{
     color: #152525;

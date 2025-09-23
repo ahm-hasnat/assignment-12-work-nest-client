@@ -94,14 +94,14 @@ const Sidebar = () => {
         )}
         {!roleLoading && role === "admin" && (
           <>
-            <NavLink to="/dashboard/manage-users" className={activeLink}>
+            <NavLink to="/dashboard/manage-user" className={activeLink}>
               <div className="flex items-center gap-2">
                 <User className="w-5 h-5" />
                 <span>Manage Users</span>
               </div>
             </NavLink>
 
-            <NavLink to="/dashboard/manage-tasks" className={activeLink}>
+            <NavLink to="/dashboard/manage-task" className={activeLink}>
               <div className="flex items-center gap-2">
                 <ClipboardList className="w-5 h-5" />
                 <span>Manage Tasks</span>

@@ -17,6 +17,8 @@ import TaskList from '../Pages/DashBoard/WorkerDash/TaskList';
 import TaskDetails from '../Pages/DashBoard/WorkerDash/TaskDetails';
 import MySubmissions from '../Pages/DashBoard/WorkerDash/MySubmissions';
 import Withdrawals from '../Pages/DashBoard/WorkerDash/WithDrawals';
+import ManageUsers from '../Pages/DashBoard/AdminDash/ManageUsers';
+import ManageTasks from '../Pages/DashBoard/AdminDash/ManageTasks';
 
 export const Router = createBrowserRouter([
   {
@@ -94,7 +96,18 @@ export const Router = createBrowserRouter([
   {
     path:'/dashboard/withdraw',
     element:<Withdrawals></Withdrawals>
+  },
+
+  // admin dash
+  {
+    path: '/dashboard/manage-user',
+    element:<ManageUsers></ManageUsers>
+  },
+  {
+    path:'/dashboard/manage-task',
+    element:<ManageTasks></ManageTasks>
   }
+
     ]
   },
   {

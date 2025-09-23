@@ -134,7 +134,7 @@ const MyTasks = () => {
 
                     {/* Completion */}
                     <td>
-                      <span className="badge badge-outline badge-primary">
+                      <span className="badge badge-outline w-24 badge-primary">
                         {task.completion_date}
                       </span>
                     </td>

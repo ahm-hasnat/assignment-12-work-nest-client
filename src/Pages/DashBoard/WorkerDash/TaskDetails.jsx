@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
@@ -10,7 +10,7 @@ const TaskDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-
+const queryClient = useQueryClient();
   // Fetch single task
   const { data: task, isLoading: taskLoading } = useQuery({
     queryKey: ["task", id],
@@ -21,17 +21,17 @@ const TaskDetails = () => {
   });
 
   // Fetch submission for this task and user
-  const { data: userSubmission, isLoading: submissionLoading } = useQuery({
+  const { data: userSubmission, isLoading: submissionLoading,refetch } = useQuery({
     queryKey: ["submission", id, user?.email],
     enabled: !!task && !!user,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/allSubmits/${task._id}/${user.email}`);
-
+      const res = await axiosSecure.get(
+        `/allSubmits/${task._id}/${user.email}`
+      );
 
       return res.data;
       // Assuming API returns an array
     },
-    
   });
 
   // Mutation for submission
@@ -42,6 +42,7 @@ const TaskDetails = () => {
     },
     onSuccess: () => {
       Swal.fire("Submitted!", "Your submission has been sent.", "success");
+      refetch();
     },
     onError: () => {
       Swal.fire("Error", "Something went wrong!", "error");
@@ -62,6 +63,7 @@ const TaskDetails = () => {
       submission_details: submissionDetails,
       buyer_name: task.added_By,
       buyer_email: task.buyer_email,
+      
     };
 
     submissionMutation.mutate(submissionData);
@@ -70,9 +72,10 @@ const TaskDetails = () => {
 
   if (taskLoading) return <p className="text-center py-10">Loading task...</p>;
 
- const isButtonDisabled =
-  submissionLoading || userSubmission?.submitted;
-
+  const isButtonDisabled =
+    submissionLoading ||
+    userSubmission?.submitted ||
+    submissionMutation.isLoading;
 
   return (
     <>
@@ -136,7 +139,7 @@ const TaskDetails = () => {
             <button
               type="submit"
               disabled={submissionMutation.isLoading || isButtonDisabled}
-              className="btn btn1 w-full mt-3"
+              className="btn btn1 w-full mt-3 "
             >
               {isButtonDisabled
                 ? "Submitted"
