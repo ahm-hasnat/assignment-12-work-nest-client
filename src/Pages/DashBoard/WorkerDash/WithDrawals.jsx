@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import {  useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import Footer from "../../../Components/Footer/Footer";
 import { FaCoins, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
@@ -10,13 +10,14 @@ const Withdrawals = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const minCoins = 200;
+  const queryClient = useQueryClient();
 
   const { register, handleSubmit, watch, reset } = useForm();
   const withdrawCoins = watch("withdrawal_coin", 0);
   const calculatedAmount = (withdrawCoins / 20).toFixed(2);
 
-  // Fetch user coins dynamically using React Query v5
-  const { data: userData, refetch } = useQuery({
+  // Fetch user data
+  const { data: userData } = useQuery({
     queryKey: ["userCoins", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/allUsers/${user.email}`);
@@ -24,14 +25,29 @@ const Withdrawals = () => {
     },
     enabled: !!user?.email,
   });
-console.log(userData);
+
   const userCoins = userData?.coins || 0;
-  const isValid = withdrawCoins >= minCoins && withdrawCoins <= userCoins;
-  const remainingCoins = userCoins - withdrawCoins;
 
-  const dollarValue = (userCoins / 20).toFixed(2);
+  // Fetch all withdrawal requests
+  const { data: allWithdraws = [] } = useQuery({
+    queryKey: ["allWithdraws"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/allWithdraws");
+      return res.data;
+    },
+  });
 
-  const queryClient = useQueryClient(); 
+  // Calculate total coins already requested by this user
+  const totalRequested = allWithdraws
+    .filter(w => w.worker_email === user?.email)
+    .reduce((sum, w) => sum + (Number(w.withdrawal_coin) || 0), 0);
+
+  // Available coins for new request
+  const availableCoins = userCoins - totalRequested;
+
+  const isValid = withdrawCoins >= minCoins && withdrawCoins <= availableCoins;
+  const dollarValue = (availableCoins / 20).toFixed(2);
+  const remainingCoins = availableCoins - withdrawCoins;
 
   const onSubmit = async (data) => {
     if (!isValid) {
@@ -40,33 +56,31 @@ console.log(userData);
 
     const withdrawalData = {
       worker_email: userData.email,
-    worker_name: userData.name || userData.displayName,
+      worker_name: userData.name || userData.displayName,
       withdrawal_coin: Number(data.withdrawal_coin),
       withdrawal_amount: Number(calculatedAmount),
       payment_system: data.payment_system,
       account_number: data.account_number,
       withdraw_date: new Date(),
-      
     };
 
     try {
-    const res = await axiosSecure.post("/withdrawals", withdrawalData);
-    if (res.data.insertedId) {
-      Swal.fire("Success", "Withdrawal request submitted!", "success");
-      reset();
-
-      // **Invalidate the userData query so Navbar refetches coins**
-      queryClient.invalidateQueries(["userData", user.email]);
-      queryClient.invalidateQueries(["userData", user.email]);
+      const res = await axiosSecure.post("/withdrawals", withdrawalData);
+      if (res.data.insertedId) {
+        Swal.fire("Success", "Withdrawal request submitted!", "success");
+        reset();
+        queryClient.invalidateQueries(["allWithdraws"]);
+        queryClient.invalidateQueries(["userCoins", user.email]);
+      }
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
     }
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
-};
+  };
+
   return (
     <>
       <div className="max-w-2xl mx-auto p-6 mb-10 mt-5">
-        <h2 className="text-3xl font-bold mb-6 text-center primary flex items-center justify-center gap-2">
+        <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-2">
           <FaMoneyBillWave className="text-green-600" />
           Withdraw your Money
         </h2>
@@ -76,37 +90,34 @@ console.log(userData);
           <p className="text-lg font-semibold flex items-center justify-center gap-2">
             Total Coins: <FaCoins className="text-yellow-500" /> {userCoins}
           </p>
+          <p className="text-lg font-semibold flex items-center justify-center gap-2">
+            Available for withdrawal: <FaCoins className="text-yellow-500" /> {availableCoins}
+          </p>
           <p className="text-lg flex items-center justify-center gap-1">
-            Withdrawal Amount: <FaDollarSign className="text-blue-500" />
+            Withdrawal amount ($): <FaDollarSign className="text-blue-500" />
             <span className="font-bold">{dollarValue}</span>
           </p>
         </div>
 
-        {userCoins < minCoins ? (
+        {availableCoins < minCoins ? (
           <p className="text-red-500 text-center font-semibold">
             Insufficient coin (Minimum {minCoins} coins required)
           </p>
         ) : (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-full mx-auto space-y-4 shadow-lg p-5 rounded-2xl"
-          >
-            {/* Coins to Withdraw */}
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto space-y-4 shadow-lg p-5 rounded-2xl">
             <div>
               <label className="block font-medium mb-1">Coins to Withdraw</label>
               <input
                 type="number"
                 {...register("withdrawal_coin", { required: true })}
-                className={`input input-bordered w-full ${
-                  !isValid && withdrawCoins > 0 ? "border-red-500" : ""
-                }`}
+                className={`input input-bordered w-full ${!isValid && withdrawCoins > 0 ? "border-red-500" : ""}`}
                 placeholder="Enter coin amount"
-                max={userCoins}
+                max={availableCoins}
                 min={minCoins}
               />
               {!isValid && withdrawCoins > 0 && (
                 <p className="text-red-500 text-sm mt-1">
-                  Amount must be between {minCoins} and {userCoins} coins.
+                  Amount must be between {minCoins} and {availableCoins} coins.
                 </p>
               )}
               {isValid && withdrawCoins > 0 && (
@@ -116,24 +127,14 @@ console.log(userData);
               )}
             </div>
 
-            {/* Auto-Calculated Withdrawal Amount */}
             <div>
               <label className="block font-medium mb-1">Withdrawal Amount ($)</label>
-              <input
-                type="text"
-                value={calculatedAmount}
-                readOnly
-                className="input input-bordered w-full bg-gray-100 flex items-center"
-              />
+              <input type="text" value={calculatedAmount} readOnly className="input input-bordered w-full bg-gray-100" />
             </div>
 
-            {/* Payment System */}
             <div>
               <label className="block font-medium mb-1">Select Payment System</label>
-              <select
-                {...register("payment_system", { required: true })}
-                className="select select-bordered w-full"
-              >
+              <select {...register("payment_system", { required: true })} className="select select-bordered w-full">
                 <option value="">-- Select Payment System --</option>
                 <option value="Bkash">Bkash</option>
                 <option value="Rocket">Rocket</option>
@@ -143,15 +144,9 @@ console.log(userData);
               </select>
             </div>
 
-            {/* Account Number */}
             <div>
               <label className="block font-medium mb-1">Account Number</label>
-              <input
-                type="text"
-                {...register("account_number", { required: true })}
-                className="input input-bordered w-full"
-                placeholder="Enter account number"
-              />
+              <input type="text" {...register("account_number", { required: true })} className="input input-bordered w-full" placeholder="Enter account number" />
             </div>
 
             <div className="flex justify-center">

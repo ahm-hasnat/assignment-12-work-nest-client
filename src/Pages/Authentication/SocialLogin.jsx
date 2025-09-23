@@ -15,28 +15,40 @@ const SocialLogin = () => {
     const result = await signInWithGoogle();
     const user = result.user;
 
-    // Prepare user info
-    const userInfo = {
-      name: user.displayName,
-      email: user.email,
-      provider: "google",
-      photoURL: user.photoURL,
-      role: "worker", // default role
-      coins: 10,
-      created_at: new Date().toISOString(),
-      last_log_in: new Date().toISOString(),
-    };
+    // Check if user exists
+    const existingUserRes = await axiosInstance.get(`/allUsers/${user.email}`);
+    const existingUser = existingUserRes.data;
 
-    // Upsert user
-    await axiosInstance.put(`/allUsers/upsert/${user.email}`, userInfo);
-    await axiosInstance.put(`/allWorkers/upsert/${user.email}`, userInfo);
-    console.log("User created or updated successfully");
+    if (!existingUser) {
+      // New user → set initial coins
+      const newUser = {
+        name: user.displayName,
+        email: user.email,
+        provider: "google",
+        photoURL: user.photoURL,
+        role: "worker", // default role
+        coins: 10,      // initial coins only
+        created_at: new Date().toISOString(),
+        last_log_in: new Date().toISOString(),
+      };
+      await axiosInstance.put(`/allUsers/upsert/${user.email}`, newUser);
+      await axiosInstance.put(`/allWorkers/upsert/${user.email}`, newUser);
+      console.log("New user created with initial coins.");
+    } else {
+      // Existing user → update only last_log_in
+      await axiosInstance.put(`/allUsers/upsert/${user.email}`, {
+        last_log_in: new Date().toISOString(),
+      });
+      console.log("Existing user logged in, coins preserved.");
+    }
 
     navigate(from);
   } catch (error) {
-    console.error(error);
+    console.error("Google sign-in error:", error);
   }
 };
+
+
 
   return (
     <div className="text-center">
