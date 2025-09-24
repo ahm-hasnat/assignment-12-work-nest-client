@@ -57,7 +57,7 @@ const MySubmissions = () => {
                 <th>#</th>
                 <th className="text-start pl-8">Image</th>
                 <th className="text-start pl-8">Task Title</th>
-                <th>Payable Amount</th>
+                <th>Payment</th>
                 <th>Submitted On</th>
                 <th>Status</th>
               </tr>

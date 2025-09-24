@@ -6,6 +6,7 @@ import Logo from "../Shared/logo";
 import { Link } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAuth from "../../Hooks/useAuth";
+import NotificationBell from "../Notification/NotifucationBell";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -38,11 +39,7 @@ console.log(userData);
 
       <div className="flex items-center gap-8">
         <div className="relative cursor-pointer">
-          <FaBell className="text-xl text-gray-600 hover:text-[#49ed2c]" />
-          <span className="absolute -top-1.5 -right-1 bg-red-500 text-white text-xs
-           w-4 h-4 flex items-center justify-center rounded-full">
-            1
-          </span>
+          <NotificationBell></NotificationBell>
         </div>
         <div
           className="flex items-center gap-2 text-black

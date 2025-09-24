@@ -38,10 +38,11 @@ const Withdrawals = () => {
   });
 
   // Calculate total coins already requested by this user
-  const totalRequested = allWithdraws
-    .filter(w => w.worker_email === user?.email)
-    .reduce((sum, w) => sum + (Number(w.withdrawal_coin) || 0), 0);
-
+ const totalRequested = allWithdraws
+  .filter(
+    (w) => w.worker_email === user?.email && w.status === "pending"
+  )
+  .reduce((sum, w) => sum + (Number(w.withdrawal_coin) || 0), 0);
   // Available coins for new request
   const availableCoins = Math.max(userCoins - totalRequested, 0);
 

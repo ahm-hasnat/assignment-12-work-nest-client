@@ -196,7 +196,7 @@ const totalEarnings = workerSubmissions
               <tr>
                 <th className="px-4 py-2">#</th>
                 <th className="px-4 py-2">Task Title</th>
-                <th className="px-4 py-2">Payable Amount</th>
+                <th className="px-4 py-2">Payment</th>
                 <th className="px-4 py-2">Buyer Name</th>
                 <th className="px-4 py-2">Status</th>
               </tr>
@@ -209,7 +209,7 @@ const totalEarnings = workerSubmissions
                 >
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2 font-medium">{sub.task_title}</td>
-                  <td className="px-4 py-2">${sub.payable_amount}</td>
+                  <td ><div className="flex items-center justify-center gap-1 w-full"><FaCoins className="text-yellow-500"></FaCoins>{sub.payable_amount}</div></td>
                   <td className="px-4 py-2">{sub.buyer_name}</td>
                   <td className="px-4 py-2">
                     <span className="px-2 py-1 rounded-full bg-green-200 text-green-800 text-sm font-semibold">
