@@ -90,7 +90,8 @@ const Login = () => {
               className="input input-bordered w-full pr-10"
               placeholder="Password"
             />
-            <p className="text-xs text-gray-500 font-light hover:text-blue-500 hover:underline cursor-pointer">Forgot password?</p>
+            <p className="text-xs text-gray-500 font-light hover:text-blue-500 mt-1
+            hover:underline cursor-pointer">Forgot password?</p>
             <span
               className="absolute right-3 top-5 -translate-y-1/2 cursor-pointer text-gray-600"
               onClick={() => setShowPassword(!showPassword)}

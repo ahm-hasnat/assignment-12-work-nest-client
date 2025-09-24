@@ -28,11 +28,13 @@ const PaymentHistory = () => {
 
   // Filter only (sorting removed)
   const filteredPayments = useMemo(() => {
-    return payments.filter(
-      (p) =>
-        p.packageName.toLowerCase().includes(search.toLowerCase()) ||
-        p.transactionId.toLowerCase().includes(search.toLowerCase())
-    );
+    return payments
+      .filter((p) => p.transactionId && p.transactionId.trim() !== "") // must have transactionId
+      .filter(
+        (p) =>
+          p.packageName.toLowerCase().includes(search.toLowerCase()) ||
+          p.transactionId.toLowerCase().includes(search.toLowerCase())
+      );
   }, [payments, search]);
 
   if (isLoading)
@@ -67,11 +69,17 @@ const PaymentHistory = () => {
               <tr>
                 {[
                   { name: "", key: "index", icon: <FaHashtag /> },
-                  { name: "Coins", key: "coins", icon: <FaCoins /> },
+
                   { name: "Package", key: "packageName", icon: <FaBoxOpen /> },
+
                   { name: "Price", key: "price", icon: <FaDollarSign /> },
+                  { name: "Coins", key: "coins", icon: <FaCoins /> },
                   { name: "Transaction ID", key: "transactionId" },
-                  { name: "Payment Date", key: "date", icon: <FaCalendarAlt /> },
+                  {
+                    name: "Payment Date",
+                    key: "date",
+                    icon: <FaCalendarAlt />,
+                  },
                 ].map((col) => (
                   <th
                     key={col.key}
@@ -113,23 +121,13 @@ const PaymentHistory = () => {
                       {idx + 1}
                     </td>
 
-                    {/* Coins with warning badge */}
-                    <td className="px-6 py-5 text-sm text-gray-700">
-                      <span
-                        className="inline-flex items-center justify-center gap-1 
-                    px-3 py-1 w-20 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold"
-                      >
-                        <FaCoins className="text-yellow-500" />
-                        {payment.coins}
-                      </span>
-                    </td>
-
                     {/* Package with soft primary badge */}
                     <td className="px-6 py-5 text-sm text-gray-700">
                       <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
                         {payment.packageName}
                       </span>
                     </td>
+                    
 
                     {/* Price with soft success badge */}
                     <td className="px-6 py-5 text-sm text-gray-700">
@@ -141,6 +139,18 @@ const PaymentHistory = () => {
                         <FaDollarSign className="text-green-600" />
                         {payment.price}
                       </span>
+                    </td>
+                    {/* Coins with warning badge */}
+                    <td>
+                      <div className="px-6 py-5 text-sm text-gray-700">
+                        <span
+                          className="inline-flex items-center justify-center gap-1 
+                    px-3 py-1 w-20 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold"
+                        >
+                          <FaCoins className="text-yellow-500" />
+                          {payment.coins}
+                        </span>
+                      </div>
                     </td>
 
                     {/* Transaction ID */}

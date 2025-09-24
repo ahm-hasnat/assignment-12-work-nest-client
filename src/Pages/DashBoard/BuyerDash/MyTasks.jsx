@@ -118,7 +118,7 @@ const MyTasks = () => {
                     {/* Workers */}
                     <td>
                       <div className="badge badge-soft badge-success w-12 justify-center">
-                        {task.required_workers}
+                        {task.currently_required_workers}
                       </div>
                     </td>
 

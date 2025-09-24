@@ -8,11 +8,16 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       task_title: "",
       task_detail: "",
-      required_workers: 1,
+      currently_required_workers: 1,
     },
   });
 
@@ -22,7 +27,8 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
       reset({
         task_title: task.task_title || "",
         task_detail: task.task_detail || "",
-        required_workers: task.required_workers || 1,
+        currently_required_workers:
+          task.currently_required_workers ?? task.required_workers ?? 1,
       });
     }
   }, [task, reset]);
@@ -30,7 +36,10 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
   // Mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedTask) => {
-      const res = await axiosSecure.put(`/allTasks/${updatedTask.id}`, updatedTask);
+      const res = await axiosSecure.put(
+        `/allTasks/${updatedTask.id}`,
+        updatedTask
+      );
       return res.data;
     },
     onSuccess: () => {
@@ -40,20 +49,26 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
       onClose();
     },
     onError: (err) => {
-      Swal.fire("Error", err.response?.data?.message || "Failed to update task", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Failed to update task",
+        "error"
+      );
     },
   });
 
   const onSubmit = (data) => {
     if (!task?._id) return Swal.fire("Error", "Task ID is missing!", "error");
 
-    const totalPayable = Number(data.required_workers) * Number(task.payable_amount || 0);
+    const totalPayable =
+      Number(task.required_workers) *
+      Number(task.payable_amount || 0);
 
     updateMutation.mutate({
       id: task._id.toString(),
       task_title: data.task_title,
       task_detail: data.task_detail,
-      required_workers: Number(data.required_workers),
+      currently_required_workers: Number(data.currently_required_workers),
       totalPayable,
     });
   };
@@ -84,7 +99,9 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
                 className="input input-bordered w-full"
               />
               {errors.task_title && (
-                <p className="text-red-500 text-sm mt-1">Task title is required</p>
+                <p className="text-red-500 text-sm mt-1">
+                  Task title is required
+                </p>
               )}
             </div>
 
@@ -103,13 +120,15 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
             {/* Required Workers */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text primary mb-1">Required Workers</span>
+                <span className="label-text primary mb-1">
+                  Required Workers
+                </span>
               </label>
               <input
                 type="number"
                 min={1}
                 placeholder="Total number of workers"
-                {...register("required_workers", {
+                {...register("currently_required_workers", {
                   required: true,
                   valueAsNumber: true,
                 })}

@@ -125,8 +125,8 @@ const AdminHome = () => {
       <h2 className="text-3xl font-bold text-center mb-8">All Status</h2>
 
       {/* Pie Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-lg mb-5">
-        <ResponsiveContainer width="100%" height={350}>
+      <div className="bg-white p-5 rounded-xl shadow-lg mb-5">
+        <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie
               data={pieData}

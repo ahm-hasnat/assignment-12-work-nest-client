@@ -118,7 +118,7 @@ const queryClient = useQueryClient();
               </p>
               <p className="text-gray-600">
                 <span className="font-semibold">Required Workers:</span>{" "}
-                {task.required_workers}
+                {task.currently_required_workers}
               </p>
             </div>
           </div>

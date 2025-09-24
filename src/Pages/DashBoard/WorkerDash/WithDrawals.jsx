@@ -43,11 +43,12 @@ const Withdrawals = () => {
     .reduce((sum, w) => sum + (Number(w.withdrawal_coin) || 0), 0);
 
   // Available coins for new request
-  const availableCoins = userCoins - totalRequested;
+  const availableCoins = Math.max(userCoins - totalRequested, 0);
 
   const isValid = withdrawCoins >= minCoins && withdrawCoins <= availableCoins;
   const dollarValue = (availableCoins / 20).toFixed(2);
-  const remainingCoins = availableCoins - withdrawCoins;
+
+  const remainingCoins = Math.max(availableCoins - withdrawCoins, 0);
 
   const onSubmit = async (data) => {
     if (!isValid) {
@@ -91,17 +92,18 @@ const Withdrawals = () => {
             Total Coins: <FaCoins className="text-yellow-500" /> {userCoins}
           </p>
           <p className="text-lg font-semibold flex items-center justify-center gap-2">
-            Available for withdrawal: <FaCoins className="text-yellow-500" /> {availableCoins}
+            After withdraw Request: <FaCoins className="text-yellow-500" /> {availableCoins}
           </p>
           <p className="text-lg flex items-center justify-center gap-1">
-            Withdrawal amount ($): <FaDollarSign className="text-blue-500" />
+            Withdrawal amount: <FaDollarSign className="text-blue-500" />
             <span className="font-bold">{dollarValue}</span>
           </p>
         </div>
 
         {availableCoins < minCoins ? (
           <p className="text-red-500 text-center font-semibold">
-            Insufficient coin (Minimum {minCoins} coins required)
+            
+            Insufficient coin or All coins has been sent for withdrawal request. (Minimum {minCoins} coins required)
           </p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto space-y-4 shadow-lg p-5 rounded-2xl">

@@ -96,7 +96,7 @@ const ManageTasks = () => {
                 <td>
                   <span className="badge badge-soft badge-success w-10">
                     {" "}
-                    {task.required_workers}
+                    {task.currently_required_workers}
                   </span>
                 </td>
                 <td>
