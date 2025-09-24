@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import noTasksAnimation from "/src/assets/nodata.json";
 import {
   FaUser,
   FaCalendarAlt,
@@ -11,6 +12,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
+import Lottie from "lottie-react";
 
 const TaskList = () => {
   const axiosSecure = useAxiosSecure();
@@ -48,7 +50,14 @@ const TaskList = () => {
         </motion.h2>
 
         {availableTasks.length === 0 ? (
+             <div className="flex flex-col items-center justify-center py-20">
+            <Lottie
+              animationData={noTasksAnimation}
+              loop={true}
+              className="w-96 h-96"
+            />
           <p className="text-center text-gray-500">No tasks available.</p>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {availableTasks.map((task) => (

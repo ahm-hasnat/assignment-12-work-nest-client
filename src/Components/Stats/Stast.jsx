@@ -39,10 +39,11 @@ const formatNumber = (num) => {
 
 const Stats = () => {
   const calcDuration = (num) => {
-    if (num < 1000) return 2.5;
-    if (num < 10000) return 3.5;
-    if (num < 100000) return 4.5;
-    return 5.5;
+    if (num <= 1000) return 5;   // small numbers finish quick
+  if (num <= 10000) return 10;  // medium numbers
+  if (num <= 100000) return 15; // larger numbers
+  if (num <= 1000000) return 20; 
+  return 25;  
   };
 
   return (

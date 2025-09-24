@@ -11,44 +11,54 @@ const SocialLogin = () => {
   const axiosInstance = useAxios();
 
   const handleGoogleSignIn = async () => {
-  try {
-    const result = await signInWithGoogle();
-    const user = result.user;
+    try {
+      // 1️⃣ Sign in with Google
+      const result = await signInWithGoogle();
+      const user = result.user;
 
-    // Check if user exists
-    const existingUserRes = await axiosInstance.get(`/allUsers/${user.email}`);
-    const existingUser = existingUserRes.data;
+      if (!user) throw new Error("Google login failed");
 
-    if (!existingUser) {
-      // New user → set initial coins
-      const newUser = {
+      const payload = {
         name: user.displayName,
         email: user.email,
         provider: "google",
         photoURL: user.photoURL,
-        role: "worker", // default role
-        coins: 10,      // initial coins only
+        role: "worker",
+        coins: 10,
         created_at: new Date().toISOString(),
-        last_log_in: new Date().toISOString(),
       };
-      await axiosInstance.put(`/allUsers/upsert/${user.email}`, newUser);
-      await axiosInstance.put(`/allWorkers/upsert/${user.email}`, newUser);
-      console.log("New user created with initial coins.");
-    } else {
-      // Existing user → update only last_log_in
-      await axiosInstance.put(`/allUsers/upsert/${user.email}`, {
-        last_log_in: new Date().toISOString(),
-      });
-      console.log("Existing user logged in, coins preserved.");
+
+      // 2️⃣ Check if user exists in allUsers
+      let existingUser = null;
+      try {
+        const res = await axiosInstance.get(`/allUsers/${user.email}`);
+        existingUser = res.data;
+      } catch (err) {
+        // User not found → will create
+      }
+
+      if (!existingUser) {
+        // New user → POST
+        await axiosInstance.post("/allUsers", payload);
+        await axiosInstance.post("/allWorkers", payload);
+        console.log("New user created in DB");
+      } else {
+        // Existing user → PATCH last_log_in only
+        await axiosInstance.patch(`/allUsers/${user.email}`, {
+          last_log_in: new Date().toISOString(),
+        });
+        await axiosInstance.patch(`/allWorkers/${user.email}`, {
+          last_log_in: new Date().toISOString(),
+        });
+        console.log("Existing user last_log_in updated");
+      }
+
+      // 3️⃣ Navigate after login
+      navigate(from);
+    } catch (error) {
+      console.error("Google sign-in error:", error);
     }
-
-    navigate(from);
-  } catch (error) {
-    console.error("Google sign-in error:", error);
-  }
-};
-
-
+  };
 
   return (
     <div className="text-center">

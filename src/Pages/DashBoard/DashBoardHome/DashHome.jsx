@@ -3,6 +3,7 @@ import Footer from "../../../Components/Footer/Footer";
 import AdminHome from "../AdminDash/AdminHome";
 import useUserRole from "../../../Hooks/useUserRole"; // your custom hook
 import BuyerHome from "../BuyerDash/BuyerHome";
+import WorkerHome from "../WorkerDash/WorkerHome";
 
 const DashHome = () => {
   const { role: userRole, roleLoading } = useUserRole();
@@ -16,6 +17,9 @@ const DashHome = () => {
       {userRole === "admin" && <AdminHome />}
       {userRole === "buyer" && 
         <BuyerHome></BuyerHome>
+      }
+      {userRole === "worker" && 
+        <WorkerHome></WorkerHome>
       }
 
       <footer>

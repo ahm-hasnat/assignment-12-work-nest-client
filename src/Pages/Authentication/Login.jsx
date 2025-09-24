@@ -17,52 +17,74 @@ const Login = () => {
   const from = location.state?.from || "/";
 
    const onSubmit = async (data) => {
-    try {
-      // 1️⃣ Check if user exists in allUsers collection
-      const res = await axiosInstance.get(`/allUsers/${data.email}`);
+  try {
+    // 1️⃣ Check if user exists in allUsers collection
+    const res = await axiosInstance.get(`/allUsers/${data.email}`);
+    const user = res.data;
 
-      const user = res.data;
-      console.log(res);
-   
-
-      if (!user || user.provider === "google") {
-        Swal.fire({
-          icon: "info", 
-          title: "User Not Registered",
-          text: "Please register first",
-          timer: 2000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-        });
-        return;
-      }
-      
-
-      // 2️⃣ Attempt Firebase sign-in
-      await signIn(data.email, data.password);
-
+    if (!user) {
+      // User not found
       Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: "Redirecting...",
-        timer: 1500,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      }).then(() => navigate(from));
-
-    } catch (error) {
-      console.error(error);
-      // Firebase failed sign-in (wrong password)
-      Swal.fire({
-        icon: "error",
-        title: "Invalid Password",
-        text: "The password you entered is incorrect",
+        icon: "info",
+        title: "User Not Registered",
+        text: "Please register first",
         timer: 2000,
         timerProgressBar: true,
         showConfirmButton: false,
       });
+      return;
     }
-  };
+
+    if (user.provider === "google") {
+      Swal.fire({
+        icon: "info",
+        title: "User registered with Google",
+        text: "Please use Google login",
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    // 2️⃣ Attempt Firebase sign-in
+    await signIn(data.email, data.password);
+
+    Swal.fire({
+      icon: "success",
+      title: "Login Successful",
+      text: "Redirecting...",
+      timer: 1500,
+      timerProgressBar: true,
+      showConfirmButton: false,
+    }).then(() => navigate(from));
+  } catch (error) {
+    // Check if error is 404 (user not found)
+    if (error.response?.status === 404) {
+      Swal.fire({
+        icon: "info",
+        title: "User Not Found",
+        text: "Please register first",
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    console.error(error);
+    // Firebase failed sign-in (wrong password)
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "The password you entered is incorrect",
+      timer: 2000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+    });
+  }
+};
+
 
   return (
     <div className="card bg-base-100 w-full max-w-md mx-auto shadow-2xl mt-24">
