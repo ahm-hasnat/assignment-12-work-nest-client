@@ -42,7 +42,8 @@ const queryClient = useQueryClient();
     },
     onSuccess: () => {
       Swal.fire("Submitted!", "Your submission has been sent.", "success");
-      refetch();
+     queryClient.invalidateQueries(["submission", id, user?.email]);
+      queryClient.invalidateQueries(["task", id]);
     },
     onError: () => {
       Swal.fire("Error", "Something went wrong!", "error");

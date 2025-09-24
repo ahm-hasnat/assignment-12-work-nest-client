@@ -44,7 +44,8 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
     },
     onSuccess: () => {
       // Automatically refetch tasks to sync cache
-      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries(["tasks"]); // list of tasks
+      queryClient.invalidateQueries(["task", task._id]);
       Swal.fire("Success", "Task updated successfully", "success");
       onClose();
     },
@@ -60,16 +61,14 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
   const onSubmit = (data) => {
     if (!task?._id) return Swal.fire("Error", "Task ID is missing!", "error");
 
-    const totalPayable =
-      Number(task.required_workers) *
-      Number(task.payable_amount || 0);
+    
 
     updateMutation.mutate({
       id: task._id.toString(),
       task_title: data.task_title,
       task_detail: data.task_detail,
       currently_required_workers: Number(data.currently_required_workers),
-      totalPayable,
+    
     });
   };
 
@@ -134,7 +133,7 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
                 })}
                 className="input input-bordered w-full"
               />
-              {errors.required_workers && (
+              {errors.currently_required_workers && (
                 <p className="text-red-500 text-sm mt-1">
                   Required workers is required
                 </p>
