@@ -4,6 +4,7 @@ import useAuth from "../../../Hooks/useAuth";
 import Footer from "../../../Components/Footer/Footer";
 import { useState } from "react";
 import { FaCoins } from "react-icons/fa";
+import Loading from "../../../Components/Loading/Loading";
 
 const MySubmissions = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,7 +22,7 @@ const MySubmissions = () => {
   });
 
   if (isLoading)
-    return <p className="text-center py-10">Loading submissions...</p>;
+    return <Loading></Loading>;
 
   // Filter submissions by status
   const filteredSubmissions = statusFilter

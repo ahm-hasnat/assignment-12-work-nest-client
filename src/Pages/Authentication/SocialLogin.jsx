@@ -1,14 +1,15 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
-import useAxios from "../../Hooks/useAxios";
+
 import useAuth from "../../Hooks/useAuth";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const SocialLogin = () => {
-  const { signInWithGoogle } = useAuth();
+   const { signInWithGoogle, loading: authLoading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
-  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const handleGoogleSignIn = async () => {
     try {
@@ -31,7 +32,7 @@ const SocialLogin = () => {
       // 2️⃣ Check if user exists in allUsers
       let existingUser = null;
       try {
-        const res = await axiosInstance.get(`/allUsers/${user.email}`);
+        const res = await axiosSecure.get(`/allUsers/${user.email}`);
         existingUser = res.data;
       } catch (err) {
         // User not found → will create
@@ -39,17 +40,15 @@ const SocialLogin = () => {
 
       if (!existingUser) {
         // New user → POST
-        await axiosInstance.post("/allUsers", payload);
-        await axiosInstance.post("/allWorkers", payload);
+        await axiosSecure.post("/allUsers", payload);
+       
         console.log("New user created in DB");
       } else {
         // Existing user → PATCH last_log_in only
-        await axiosInstance.patch(`/allUsers/${user.email}`, {
+        await axiosSecure.patch(`/allUsers/${user.email}`, {
           last_log_in: new Date().toISOString(),
         });
-        await axiosInstance.patch(`/allWorkers/${user.email}`, {
-          last_log_in: new Date().toISOString(),
-        });
+       
         console.log("Existing user last_log_in updated");
       }
 

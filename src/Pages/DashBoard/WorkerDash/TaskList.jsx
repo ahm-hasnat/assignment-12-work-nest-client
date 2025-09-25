@@ -13,16 +13,19 @@ import {
 } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
 import Lottie from "lottie-react";
+import useAuth from "../../../Hooks/useAuth";
 
 const TaskList = () => {
+  const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
   // Fetch tasks
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
+    enabled: !!user && !authLoading,  //
     queryFn: async () => {
-      const res = await axiosSecure.get("/allTasks");
+      const res = await axiosSecure.get(`/allTasks`);
       return res.data;
     },
   });

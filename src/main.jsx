@@ -9,6 +9,7 @@ import AuthProvider from './Context/AuthProvider.jsx'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 
+
 const queryClient = new QueryClient();
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
           <RouterProvider router={Router}></RouterProvider>
         </Elements>
        </AuthProvider>
+       
    </QueryClientProvider>
   </StrictMode>
 )

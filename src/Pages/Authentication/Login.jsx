@@ -5,12 +5,12 @@ import Swal from "sweetalert2";
 import useAuth from "../../Hooks/useAuth";
 import SocialLogin from "./SocialLogin";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import useAxios from "../../Hooks/useAxios";
+
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const { signIn } = useAuth();
-  const axiosInstance = useAxios();
+  const { signIn,user } = useAuth();
+  
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,72 +18,33 @@ const Login = () => {
 
    const onSubmit = async (data) => {
   try {
-    // 1️⃣ Check if user exists in allUsers collection
-    const res = await axiosInstance.get(`/allUsers/${data.email}`);
-    const user = res.data;
-
-    if (!user) {
-      // User not found
-      Swal.fire({
-        icon: "info",
-        title: "User Not Registered",
-        text: "Please register first",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-      return;
-    }
-
-    if (user.provider === "google") {
-      Swal.fire({
-        icon: "info",
-        title: "User registered with Google",
-        text: "Please use Google login",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-      return;
-    }
-
-    // 2️⃣ Attempt Firebase sign-in
-    await signIn(data.email, data.password);
+    // Attempt Firebase sign-in
+    const userCredential = await signIn(data.email, data.password);
 
     Swal.fire({
       icon: "success",
       title: "Login Successful",
       text: "Redirecting...",
-      timer: 1500,
+      timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
     }).then(() => navigate(from));
-  } catch (error) {
-    // Check if error is 404 (user not found)
-    if (error.response?.status === 404) {
-      Swal.fire({
-        icon: "info",
-        title: "User Not Found",
-        text: "Please register first",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-      return;
-    }
 
+  } catch (error) {
     console.error(error);
-    // Firebase failed sign-in (wrong password)
     Swal.fire({
       icon: "error",
-      title: "Invalid Password",
-      text: "The password you entered is incorrect",
+      title: "Login Failed",
+      text: error.message.includes("user-not-found")
+        ? "User not registered. Please register first."
+        : "Invalid password or email.",
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
     });
   }
 };
+
 
 
   return (
@@ -136,7 +97,7 @@ const Login = () => {
         <p className="mt-4 text-center">
           <small>
             Don't have an account?{" "}
-            <Link className="text-blue-500" to="/auth/register">
+            <Link className="text-blue-500 hover:underline" to="/auth/register">
               Register
             </Link>
           </small>

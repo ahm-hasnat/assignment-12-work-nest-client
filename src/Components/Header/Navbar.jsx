@@ -4,24 +4,24 @@ import { MdArrowOutward } from "react-icons/md";
 import useAuth from "../../Hooks/useAuth";
 import NavLinks from "../Shared/Navlinks";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../Hooks/useAxios";
 import { FaCoins } from "react-icons/fa";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
-  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
 
-  const { data: allUsers = [], isLoading } = useQuery({
-    queryKey: ["allUsers"],
+  const { data: currentUser = [], isLoading } = useQuery({
+    queryKey: ["currentUser"],
     queryFn: async () => {
-      const res = await axiosInstance.get("/allUsers");
+      const res = await axiosSecure.get(`/allUsers/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email, // only fetch if user is logged in
   });
 
-  const currentUser = allUsers.find((u) => u.email === user?.email);
+ 
   const coins = currentUser?.coins || 0;
   console.log(currentUser);
   const handleLogOut = () => {

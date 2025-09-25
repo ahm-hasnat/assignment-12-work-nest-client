@@ -1,15 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaCoins } from "react-icons/fa";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import useAuth from "../../../Hooks/useAuth";
 
 const ManageUsers = () => {
+
+  const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   // Fetch all users
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["allUsers"],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get("/allUsers");
       return res.data;
@@ -52,8 +56,7 @@ const ManageUsers = () => {
       text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      reverseButtons: true,
       confirmButtonText: "Yes, remove!",
       cancelButtonText: "Cancel",
     }).then((result) => {

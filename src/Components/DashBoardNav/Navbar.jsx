@@ -12,7 +12,6 @@ const Navbar = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  
   // Fetch user details including coins, role
   const { data: userData = {} } = useQuery({
     queryKey: ["userData", user?.email],
@@ -22,9 +21,8 @@ const Navbar = () => {
       return res.data;
       // assuming API returns array
     },
-    
   });
-console.log(userData);
+  console.log(userData);
   return (
     <div
       className="flex justify-between items-center bg-white shadow-xs px-10 py-1 
@@ -56,13 +54,22 @@ console.log(userData);
             </span>
           </div>
 
-          <div className="relative group ml-3">
-            <img
-              src={user?.photoURL || "/default-avatar.png"}
-              alt="User"
-              className="w-10 h-10 rounded-full border-2 border-[#29d409] 
-              cursor-pointer"
-            />
+          <div className="relative ml-3">
+            <div className="relative ml-3 group">
+              <img
+                src={user?.photoURL || "/default-avatar.png"}
+                alt="User"
+                className="w-10 h-10 rounded-full border-2 border-[#29d409] cursor-pointer"
+              />
+
+              {/* Custom tooltip */}
+              <div
+                className="absolute top-full -left-3 transform -translate-x-1/2 mt-2 
+                  hidden group-hover:block bg-gray-100 text-black text-xs rounded px-2 py-1 whitespace-nowrap"
+              >
+                {user?.email}
+              </div>
+            </div>
           </div>
         </div>
       </div>

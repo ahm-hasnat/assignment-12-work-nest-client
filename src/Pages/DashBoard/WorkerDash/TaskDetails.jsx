@@ -5,12 +5,14 @@ import useAuth from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import { FaCoins } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
+import { useState } from "react";
 
 const TaskDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 const queryClient = useQueryClient();
+const [isSubmitting, setIsSubmitting] = useState(false);
   // Fetch single task
   const { data: task, isLoading: taskLoading } = useQuery({
     queryKey: ["task", id],
@@ -21,7 +23,7 @@ const queryClient = useQueryClient();
   });
 
   // Fetch submission for this task and user
-  const { data: userSubmission, isLoading: submissionLoading,refetch } = useQuery({
+  const { data: userSubmission, isLoading: submissionLoading } = useQuery({
     queryKey: ["submission", id, user?.email],
     enabled: !!task && !!user,
     queryFn: async () => {
@@ -40,6 +42,9 @@ const queryClient = useQueryClient();
       const res = await axiosSecure.post("/allSubmits", submission);
       return res.data;
     },
+     onMutate: () => {
+      setIsSubmitting(true); // ✅ disable immediately
+    },
     onSuccess: () => {
       Swal.fire("Submitted!", "Your submission has been sent.", "success");
      queryClient.invalidateQueries(["submission", id, user?.email]);
@@ -47,6 +52,7 @@ const queryClient = useQueryClient();
     },
     onError: () => {
       Swal.fire("Error", "Something went wrong!", "error");
+      setIsSubmitting(false); 
     },
   });
 
@@ -74,9 +80,8 @@ const queryClient = useQueryClient();
   if (taskLoading) return <p className="text-center py-10">Loading task...</p>;
 
   const isButtonDisabled =
-    submissionLoading ||
-    userSubmission?.submitted ||
-    submissionMutation.isLoading;
+    submissionLoading || userSubmission?.submitted || isSubmitting || submissionMutation.isLoading;
+
 
   return (
     <>
@@ -142,7 +147,7 @@ const queryClient = useQueryClient();
               disabled={submissionMutation.isLoading || isButtonDisabled}
               className="btn btn1 w-full mt-3 "
             >
-              {isButtonDisabled
+             {isButtonDisabled
                 ? "Submitted"
                 : submissionMutation.isLoading
                 ? "Submitting..."

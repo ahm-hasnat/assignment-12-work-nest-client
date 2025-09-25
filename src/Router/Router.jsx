@@ -19,6 +19,11 @@ import MySubmissions from '../Pages/DashBoard/WorkerDash/MySubmissions';
 import Withdrawals from '../Pages/DashBoard/WorkerDash/WithDrawals';
 import ManageUsers from '../Pages/DashBoard/AdminDash/ManageUsers';
 import ManageTasks from '../Pages/DashBoard/AdminDash/ManageTasks';
+import PrivateRoute from '../Routes/PrivateRoute';
+import AdminRoute from '../Routes/AdminRoutes';
+import BuyerRoute from '../Routes/BuyerRoute';
+import WorkerRoute from '../Routes/WorkerRoute';
+import Forbidden from '../Pages/Error/Forbidden';
 
 export const Router = createBrowserRouter([
   {
@@ -55,58 +60,58 @@ export const Router = createBrowserRouter([
       {
         index:true,
         path: '/dashboard',
-        element:<DashHome></DashHome>,
+        element:<PrivateRoute><DashHome></DashHome></PrivateRoute>
 
       },
       {
         path:'/dashboard/add-task',
-        element:<AddTask></AddTask>,
+        element:<BuyerRoute><AddTask></AddTask></BuyerRoute>
       },
       {
         path:'/dashboard/my-tasks',
-        element:<MyTasks></MyTasks>
+        element:<BuyerRoute><MyTasks></MyTasks></BuyerRoute>
       },
       {
         path:'/dashboard/purchase-coin',
-        element: <PurchaseCoin></PurchaseCoin>
+        element: <BuyerRoute><PurchaseCoin></PurchaseCoin></BuyerRoute>
       },{
 
         path : '/dashboard/payment/:p/:n/:c',
-        element: <Payment></Payment>
+        element: <BuyerRoute><Payment></Payment></BuyerRoute>
       },
       {
         path:'/dashboard/payment-history',
-        element:<PaymentHistory></PaymentHistory>,
+        element:<BuyerRoute><PaymentHistory></PaymentHistory>,</BuyerRoute>
       },
       // worker dashboard
       {
         path: '/dashboard/all-task',
-        element:<TaskList></TaskList>,
+        element:<WorkerRoute><TaskList></TaskList></WorkerRoute>
 
       },
       {
         path: '/dashboard/task-details/:id',
-        element: <TaskDetails></TaskDetails>
+        element: <WorkerRoute><TaskDetails></TaskDetails></WorkerRoute>
       },
     {
 
       path: '/dashboard/submission',
-      element:<MySubmissions></MySubmissions>
+      element:<WorkerRoute><MySubmissions></MySubmissions></WorkerRoute>
     },
   {
     path:'/dashboard/withdraw',
-    element:<Withdrawals></Withdrawals>
+    element:<WorkerRoute><Withdrawals></Withdrawals></WorkerRoute>
   },
   
 
   // admin dash
   {
     path: '/dashboard/manage-user',
-    element:<ManageUsers></ManageUsers>
+    element:<AdminRoute><ManageUsers></ManageUsers></AdminRoute>
   },
   {
     path:'/dashboard/manage-task',
-    element:<ManageTasks></ManageTasks>
+    element:<AdminRoute><ManageTasks></ManageTasks></AdminRoute>
   }
 
     ]
@@ -114,5 +119,9 @@ export const Router = createBrowserRouter([
   {
     path:'/',
     Component:Error,
+  },
+  {
+    path:'/forbidden',
+    Component:Forbidden,
   }
 ]);

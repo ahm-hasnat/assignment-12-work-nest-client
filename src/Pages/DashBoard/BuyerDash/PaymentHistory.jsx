@@ -14,14 +14,15 @@ import Footer from "../../../Components/Footer/Footer";
 
 const PaymentHistory = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const [search, setSearch] = useState("");
 
   const { data: payments = [], isLoading } = useQuery({
     queryKey: ["payments", user?.email],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/payments/${user?.email}`);
+      const res = await axiosSecure.get(`/payments/buyer/${user?.email}`);
       return res.data;
     },
   });

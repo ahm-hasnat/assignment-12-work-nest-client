@@ -3,14 +3,17 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaCoins, FaTasks } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
+import useAuth from "../../../Hooks/useAuth";
 
 const ManageTasks = () => {
+  const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   // Fetch all tasks
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["allTasks"],
+    enabled: !!user && !authLoading,  
     queryFn: async () => {
       const res = await axiosSecure.get("/allTasks");
       return res.data;
@@ -39,8 +42,7 @@ const ManageTasks = () => {
       text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      reverseButtons: true,
       confirmButtonText: "Yes, delete!",
       cancelButtonText: "Cancel",
     }).then((result) => {

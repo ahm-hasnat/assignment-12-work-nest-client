@@ -123,9 +123,33 @@ const AdminHome = () => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-3xl font-bold text-center mb-8">All Status</h2>
+      {/* Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-10">
+          <div className="p-4 bg-blue-100 rounded-lg flex flex-col items-center justify-center gap-2">
+            <FaUsers className="text-3xl text-blue-700" />
+            <p>Total Workers</p>
+            <p className="font-bold">{totalWorkers}</p>
+          </div>
+          <div className="p-4 bg-green-100 rounded-lg flex flex-col items-center justify-center gap-2">
+            <FaUserShield className="text-3xl text-green-700" />
+            <p>Total Buyers</p>
+            <p className="font-bold">{totalBuyers}</p>
+          </div>
+          <div className="p-4 bg-yellow-100 rounded-lg flex flex-col items-center justify-center gap-2">
+            <FaCoins className="text-3xl text-yellow-600" />
+            <p>Total Coins</p>
+            <p className="font-bold">{totalCoins}</p>
+          </div>
+          <div className="p-4 bg-orange-100 rounded-lg flex flex-col items-center justify-center gap-2">
+            <FaMoneyBillWave className="text-3xl text-orange-600" />
+            <p>Total Payments</p>
+            <p className="font-bold"><span className="flex justify-center items-center gap-1"><FaDollarSign className="text-blue-600"/>{totalPayments}</span></p>
+          </div>
+        </div>
 
       {/* Pie Chart */}
       <div className="bg-white p-5 rounded-xl shadow-lg mb-5">
+
         <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie
@@ -152,29 +176,7 @@ const AdminHome = () => {
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Metric Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          <div className="p-4 bg-blue-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaUsers className="text-3xl text-blue-700" />
-            <p>Total Workers</p>
-            <p className="font-bold">{totalWorkers}</p>
-          </div>
-          <div className="p-4 bg-green-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaUserShield className="text-3xl text-green-700" />
-            <p>Total Buyers</p>
-            <p className="font-bold">{totalBuyers}</p>
-          </div>
-          <div className="p-4 bg-yellow-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaCoins className="text-3xl text-yellow-600" />
-            <p>Total Coins</p>
-            <p className="font-bold">{totalCoins}</p>
-          </div>
-          <div className="p-4 bg-orange-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaMoneyBillWave className="text-3xl text-orange-600" />
-            <p>Total Payments</p>
-            <p className="font-bold"><span className="flex justify-center items-center gap-1"><FaDollarSign className="text-blue-600"/>{totalPayments}</span></p>
-          </div>
-        </div>
+        
       </div>
 
       {/* Pending Withdrawals Table */}

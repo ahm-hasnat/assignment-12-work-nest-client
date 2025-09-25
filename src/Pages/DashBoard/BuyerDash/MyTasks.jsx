@@ -20,9 +20,9 @@ const MyTasks = () => {
   const { data: myTasks = [], isLoading } = useQuery({
     queryKey: ["buyerTasks", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get("/allTasks");
+      const res = await axiosSecure.get(`/allTasks/buyer/${user.email}`);
       return res.data
-        .filter((task) => task.buyer_email === user.email)
+      
         .sort(
           (a, b) => new Date(b.completion_date) - new Date(a.completion_date)
         );
@@ -49,12 +49,12 @@ const MyTasks = () => {
       text: "This task will be permanently deleted.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+       reverseButtons: true,
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate(id);
+        
       }
     });
   };

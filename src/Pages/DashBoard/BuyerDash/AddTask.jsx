@@ -9,6 +9,7 @@ import { FiPlusCircle } from "react-icons/fi";
 import useAuth from "../../../Hooks/useAuth";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../Components/Loading/Loading";
 
 const AddTask = () => {
   const axiosSecure = useAxiosSecure();
@@ -30,6 +31,7 @@ const AddTask = () => {
   },
   enabled: !!user?.email,
 });
+
 
   // Upload image handler
   const handleImageUpload = async (e) => {
@@ -139,6 +141,7 @@ const AddTask = () => {
             </label>
             <input
               type="number"
+              onWheel={(e) => e.currentTarget.blur()}
               min={1}
               placeholder="Total number of workers (e.g. 100)"
               {...register("required_workers", { required: true, valueAsNumber: true })}
@@ -157,6 +160,7 @@ const AddTask = () => {
             <input
               type="number"
               min={1}
+               onWheel={(e) => e.currentTarget.blur()}
               placeholder="Amount to pay each worker (e.g. 10)"
               {...register("payable_amount", { required: true, valueAsNumber: true })}
               className="input input-bordered w-full"

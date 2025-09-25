@@ -4,6 +4,8 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import { FaClipboardList, FaDollarSign, FaCoins } from "react-icons/fa";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { motion } from "framer-motion";
+import Loading from "../../../Components/Loading/Loading";
 
 const WorkerHome = () => {
   const axiosSecure = useAxiosSecure();
@@ -13,7 +15,7 @@ const WorkerHome = () => {
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ["workerSubmissions", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/submissions`);
+      const res = await axiosSecure.get(`/mySubmits/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -21,38 +23,44 @@ const WorkerHome = () => {
   const { data: withdrawals = [] } = useQuery({
     queryKey: ["workerWithdrawals", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/allWithdraws`);
+      const res = await axiosSecure.get(`/allWithdraws/workers/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
   });
 
   if (isLoading)
-    return <div className="text-center mt-20 text-gray-500">Loading...</div>;
+    return <Loading></Loading>;
 
   // Stats
   const approvedWithdrawals = withdrawals.filter(
-  (w) => w.worker_email === user.email && w.status === "approved"
-);
+    (w) => w.worker_email === user.email && w.status === "approved"
+  );
 
-const totalWithdrawnAmount = approvedWithdrawals.reduce(
-  (sum, w) => sum + Number(w.withdrawal_amount || 0),
-  0
-);
+  const totalWithdrawnAmount = approvedWithdrawals.reduce(
+    (sum, w) => sum + Number(w.withdrawal_amount || 0),
+    0
+  );
   // Filter submissions for the current worker
-const workerSubmissions = submissions.filter(
-  (s) => s.worker_email === user?.email
-);
+  const workerSubmissions = submissions.filter(
+    (s) => s.worker_email === user?.email
+  );
 
-// Stats calculations
-const totalSubmissions = workerSubmissions.length;
-const pendingCount = workerSubmissions.filter((s) => s.status === "pending").length;
-const approvedCount = workerSubmissions.filter((s) => s.status === "approved").length;
-const rejectedCount = workerSubmissions.filter((s) => s.status === "rejected").length;
+  // Stats calculations
+  const totalSubmissions = workerSubmissions.length;
+  const pendingCount = workerSubmissions.filter(
+    (s) => s.status === "pending"
+  ).length;
+  const approvedCount = workerSubmissions.filter(
+    (s) => s.status === "approved"
+  ).length;
+  const rejectedCount = workerSubmissions.filter(
+    (s) => s.status === "rejected"
+  ).length;
 
-const totalEarnings = workerSubmissions
-  .filter((s) => s.status === "approved")
-  .reduce((sum, s) => sum + Number(s.payable_amount || 0), 0);
+  const totalEarnings = workerSubmissions
+    .filter((s) => s.status === "approved")
+    .reduce((sum, s) => sum + Number(s.payable_amount || 0), 0);
 
   const maxEarningsCap = 1000;
   const earningsPercent = Math.min((totalEarnings / maxEarningsCap) * 100, 100);
@@ -141,27 +149,43 @@ const totalEarnings = workerSubmissions
         <h3 className="text-lg font-semibold mb-6 text-center">
           Submission Status
         </h3>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label={renderCustomizedLabel}
-                labelLine={false}
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${entry.name}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="h-64 w-full flex items-center justify-center">
+          {pieData.every((d) => d.value === 0) ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-gray-500 text-center"
+            >
+              <p className="text-lg font-semibold">📊 No submissions yet!</p>
+              <p className="text-sm">
+                Start working on tasks to see your progress here.
+              </p>
+            </motion.div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ name, percent }) =>
+                    `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  labelLine={false}
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${entry.name}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 
@@ -209,7 +233,12 @@ const totalEarnings = workerSubmissions
                 >
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2 font-medium">{sub.task_title}</td>
-                  <td ><div className="flex items-center justify-center gap-1 w-full"><FaCoins className="text-yellow-500"></FaCoins>{sub.payable_amount}</div></td>
+                  <td>
+                    <div className="flex items-center justify-center gap-1 w-full">
+                      <FaCoins className="text-yellow-500"></FaCoins>
+                      {sub.payable_amount}
+                    </div>
+                  </td>
                   <td className="px-4 py-2">{sub.buyer_name}</td>
                   <td className="px-4 py-2">
                     <span className="px-2 py-1 rounded-full bg-green-200 text-green-800 text-sm font-semibold">

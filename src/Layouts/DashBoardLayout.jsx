@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../Components/DashBoardNav/Navbar";
 import { Outlet } from "react-router";
-import Footer from "../Components/Footer/Footer";
+
 import Sidebar from "../Components/DashSidebar/Sidebar";
 
 const DashBoardLayout = () => {

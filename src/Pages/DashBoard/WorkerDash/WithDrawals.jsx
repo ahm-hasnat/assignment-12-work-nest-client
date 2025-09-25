@@ -7,7 +7,7 @@ import Footer from "../../../Components/Footer/Footer";
 import { FaCoins, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
 
 const Withdrawals = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const minCoins = 200;
   const queryClient = useQueryClient();
@@ -19,6 +19,7 @@ const Withdrawals = () => {
   // Fetch user data
   const { data: userData } = useQuery({
     queryKey: ["userCoins", user?.email],
+    
     queryFn: async () => {
       const res = await axiosSecure.get(`/allUsers/${user.email}`);
       return res.data;
@@ -31,8 +32,9 @@ const Withdrawals = () => {
   // Fetch all withdrawal requests
   const { data: allWithdraws = [] } = useQuery({
     queryKey: ["allWithdraws"],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
-      const res = await axiosSecure.get("/allWithdraws");
+      const res = await axiosSecure.get(`/allWithdraws/workers/${user.email}`);
       return res.data;
     },
   });

@@ -14,12 +14,13 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Swal from "sweetalert2";
 
+
 const BuyerHome = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 const queryClient = useQueryClient();
   // Fetch buyer's tasks
-  const { data: tasks = [] } = useQuery({
+  const { data: tasks = []  } = useQuery({
     queryKey: ["buyerTasks", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/allTasks/buyer/${user.email}`);
@@ -28,11 +29,12 @@ const queryClient = useQueryClient();
     enabled: !!user?.email,
   });
 
+  
   // Fetch submissions for buyer's tasks
   const { data: submissions = [] } = useQuery({
     queryKey: ["buyerSubmissions", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/submissions`);
+      const res = await axiosSecure.get(`/submissions/buyer/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,

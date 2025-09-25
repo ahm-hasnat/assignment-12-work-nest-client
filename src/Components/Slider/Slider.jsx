@@ -37,7 +37,7 @@ const Slider = () => {
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         navigation={false}
       >

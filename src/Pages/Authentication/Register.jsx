@@ -16,6 +16,7 @@ const Register = () => {
   } = useForm();
   const { createUser, updateUserProfile } = useAuth();
   const [profilePic, setProfilePic] = useState("");
+   const [uploading, setUploading] = useState(false); 
   
   const [showPassword, setShowPassword] = useState(false);
   const axiosInstance = useAxios();
@@ -25,6 +26,7 @@ const Register = () => {
 
   // Submit Handler
   const onSubmit = (data) => {
+     if (uploading) return;
     createUser(data.email, data.password)
       .then(async (result) => {
         // default coins by role
@@ -34,7 +36,7 @@ const Register = () => {
         const userInfo = {
           name: data.name,
           email: data.email,
-          role: data.role || "user",
+          role: data.role || "worker",
           photoURL: profilePic,
           coins: defaultCoins,
           created_at: new Date().toISOString(),
@@ -43,11 +45,6 @@ const Register = () => {
 
         // Post to allUsers collection
         await axiosInstance.post("/allUsers", userInfo);
-
-        // If role is worker, also save in workers collection
-        if (data.role === "worker") {
-          await axiosInstance.post("/allWorkers", userInfo);
-        }
 
         // Update Firebase profile
         const userProfile = {
@@ -88,6 +85,7 @@ const Register = () => {
     const image = e.target.files[0];
    
     if (!image) return;
+    setUploading(true);
 
     const formData = new FormData();
     formData.append("image", image);
@@ -98,17 +96,18 @@ const Register = () => {
     const res = await axios.post(imagUploadUrl, formData);
       
     setProfilePic(res.data.data.url);
+    setUploading(false);
   };
 
   return (
-    <div className="card bg-base-100 w-full max-w-lg mx-auto shadow-2xl mt-24">
+    <div className="card bg-base-100 w-full max-w-lg mx-auto shadow-2xl mt-20 mb-12">
       <div className="card-body">
         <h1 className="text-3xl font-bold text-center mb-4">Create Account</h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset className="fieldset space-y-2">
+          <fieldset className="fieldset space-y-1">
             {/* Name */}
-            <label className="label">Your Name</label>
+            <label className="label primary">Your Name</label>
             <input
               type="text"
               {...register("name", { required: true })}
@@ -120,17 +119,19 @@ const Register = () => {
             )}
 
             {/* Profile Picture */}
-            <label className="label">Profile Picture</label>
+            <label className="label primary">Profile Picture</label>
             <input
               type="file"
               onChange={handleImageUpload}
               className="file-input file-input-bordered w-full"
               required
             />
-           
+           {uploading && (
+              <p className="text-blue-500 text-sm mt-1">Uploading...</p>
+            )}
 
             {/* Email */}
-            <label className="label">Email</label>
+            <label className="label primary">Email</label>
             <input
               type="email"
               {...register("email", { required: true })}
@@ -142,7 +143,7 @@ const Register = () => {
             )}
 
             {/* Password */}
-            <label className="label">Password</label>
+            <label className="label primary">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -178,7 +179,7 @@ const Register = () => {
             )}
 
             {/* Role */}
-            <label className="label">Select Role</label>
+            <label className="label primary">Select Role</label>
             <select
               {...register("role", { required: true })}
               className="select select-bordered w-full"
@@ -190,8 +191,8 @@ const Register = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="btn bg-[#29d409] hover:bg-[#f8b02f] text-white w-full mt-4"
-            >
+              className="btn btn1 w-full mt-4"
+             disabled={uploading}>
               Register
             </button>
           </fieldset>
@@ -199,7 +200,7 @@ const Register = () => {
           <p className="mt-4 text-center">
             <small>
               Already have an account?{" "}
-              <Link className="text-blue-500" to="/auth/login">
+              <Link className="text-blue-500 hover:underline" to="/auth/login">
                 Login
               </Link>
             </small>

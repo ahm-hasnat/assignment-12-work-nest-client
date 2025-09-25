@@ -62,7 +62,7 @@ const Stats = () => {
           >
             {icon}
             <motion.span
-              className="text-4xl md:text-4xl font-bold text-primary my-5 mb-2"
+              className="text-2xl md:text-3xl font-bold text-primary my-5 mb-2"
               animate={{ color: [ "#facc15", "#14b8a6", "#ec4899"] }}
               transition={{ repeat: Infinity, duration: 2.5 }}
             >
