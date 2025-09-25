@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import { FaCoins } from "react-icons/fa";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
+import Loading from "../../../Components/Loading/Loading";
+import Footer from "../../../Components/Footer/Footer";
 
 const ManageUsers = () => {
 
@@ -66,10 +68,11 @@ const ManageUsers = () => {
     });
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading users...</p>;
+  if (isLoading) return <Loading></Loading>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <>
+    <div className="max-w-6xl mx-auto p-6 mb-10">
       <h2 className="text-3xl font-bold mb-6 text-center">Manage Users</h2>
       <div className="overflow-x-auto shadow-lg rounded-lg">
         <table className="table table-zebra w-full text-center">
@@ -133,6 +136,8 @@ const ManageUsers = () => {
         </table>
       </div>
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 

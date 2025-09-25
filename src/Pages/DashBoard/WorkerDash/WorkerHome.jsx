@@ -9,24 +9,25 @@ import Loading from "../../../Components/Loading/Loading";
 
 const WorkerHome = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
-
+   const { user, loading: authLoading } = useAuth();
   // Fetch submissions for this worker
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ["workerSubmissions", user?.email],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/mySubmits/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email,
+    
   });
   const { data: withdrawals = [] } = useQuery({
     queryKey: ["workerWithdrawals", user?.email],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allWithdraws/workers/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email,
+   
   });
 
   if (isLoading)

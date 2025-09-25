@@ -14,6 +14,7 @@ import {
 import Footer from "../../../Components/Footer/Footer";
 import Lottie from "lottie-react";
 import useAuth from "../../../Hooks/useAuth";
+import Loading from "../../../Components/Loading/Loading";
 
 const TaskList = () => {
   const { user, loading: authLoading } = useAuth();
@@ -31,7 +32,7 @@ const TaskList = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center mt-20 text-gray-500">Loading...</div>;
+    return <Loading></Loading>;
   }
 
   // Filter tasks where required_workers > 0

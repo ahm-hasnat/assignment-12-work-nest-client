@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Footer from "../../../Components/Footer/Footer";
+import Loading from "../../../Components/Loading/Loading";
 
 const PaymentHistory = () => {
   const axiosSecure = useAxiosSecure();
@@ -39,7 +40,7 @@ const PaymentHistory = () => {
   }, [payments, search]);
 
   if (isLoading)
-    return <div className="text-center mt-20 text-gray-500">Loading...</div>;
+    return <Loading></Loading>;
 
   return (
     <>

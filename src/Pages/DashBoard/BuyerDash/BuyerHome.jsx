@@ -17,27 +17,29 @@ import Swal from "sweetalert2";
 
 const BuyerHome = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 const queryClient = useQueryClient();
   // Fetch buyer's tasks
   const { data: tasks = []  } = useQuery({
     queryKey: ["buyerTasks", user?.email],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allTasks/buyer/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email,
+    
   });
 
   
   // Fetch submissions for buyer's tasks
   const { data: submissions = [] } = useQuery({
     queryKey: ["buyerSubmissions", user?.email],
+      enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/submissions/buyer/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email,
+   
   });
 
    const approveMutation = useMutation({

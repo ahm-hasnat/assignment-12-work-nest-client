@@ -20,16 +20,20 @@ import {
   FaDollarSign,
 } from "react-icons/fa";
 import { SiPaypal } from "react-icons/si";
+import useAuth from "../../../Hooks/useAuth";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const AdminHome = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  const { user, loading: authLoading } = useAuth();
+  
 
   // Fetch all users
   const { data: allUsers = [] } = useQuery({
     queryKey: ["allUsers"],
+    enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get("/allUsers");
       return res.data;
@@ -39,6 +43,7 @@ const AdminHome = () => {
   // Fetch all payments
   const { data: allPayments = [] } = useQuery({
     queryKey: ["allPayments"],
+    enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get("/payments");
       return res.data;
@@ -48,6 +53,7 @@ const AdminHome = () => {
   // Fetch all withdrawal requests
   const { data: allWithdraws = [] } = useQuery({
     queryKey: ["allWithdraws"],
+    enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get("/allWithdraws");
       return res.data;

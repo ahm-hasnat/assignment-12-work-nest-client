@@ -8,13 +8,13 @@ import Loading from "../../../Components/Loading/Loading";
 
 const MySubmissions = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [statusFilter, setStatusFilter] = useState("");
 
   // Fetch submissions for current user
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ["mySubmissions", user?.email],
-    enabled: !!user?.email,
+   enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/mySubmits/${user.email}`);
       return res.data;

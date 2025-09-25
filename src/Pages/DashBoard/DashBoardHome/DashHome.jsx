@@ -4,12 +4,13 @@ import AdminHome from "../AdminDash/AdminHome";
 import useUserRole from "../../../Hooks/useUserRole"; // your custom hook
 import BuyerHome from "../BuyerDash/BuyerHome";
 import WorkerHome from "../WorkerDash/WorkerHome";
+import Loading from "../../../Components/Loading/Loading";
 
 const DashHome = () => {
   const { role: userRole, roleLoading } = useUserRole();
 
   if (roleLoading) {
-    return <p className="text-center py-10">Loading...</p>;
+    return <Loading></Loading>;
   }
 
   return (

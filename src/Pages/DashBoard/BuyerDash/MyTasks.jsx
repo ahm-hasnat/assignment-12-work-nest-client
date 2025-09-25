@@ -8,17 +8,20 @@ import Lottie from "lottie-react";
 import noTasksAnimation from "/src/assets/nodata.json";
 import { useState } from "react";
 import UpdateTask from "../../../Components/UpdateTask/UpdateTask";
+import Loading from "../../../Components/Loading/Loading";
 
 const MyTasks = () => {
   const [selectedTask, setSelectedTask] = useState(null); // task to update
 
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
+  
 
   // Fetch my tasks
   const { data: myTasks = [], isLoading } = useQuery({
     queryKey: ["buyerTasks", user?.email],
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allTasks/buyer/${user.email}`);
       return res.data
@@ -27,7 +30,7 @@ const MyTasks = () => {
           (a, b) => new Date(b.completion_date) - new Date(a.completion_date)
         );
     },
-    enabled: !!user?.email,
+   
   });
 
   // Delete mutation
@@ -59,7 +62,7 @@ const MyTasks = () => {
     });
   };
 
-  if (isLoading) return <p className="text-center py-5">Loading tasks...</p>;
+  if (isLoading) return <Loading></Loading>;
 
   return (
     <>

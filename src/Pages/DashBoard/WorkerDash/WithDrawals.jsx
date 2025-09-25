@@ -19,12 +19,12 @@ const Withdrawals = () => {
   // Fetch user data
   const { data: userData } = useQuery({
     queryKey: ["userCoins", user?.email],
-    
+     enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allUsers/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email,
+    
   });
 
   const userCoins = userData?.coins || 0;

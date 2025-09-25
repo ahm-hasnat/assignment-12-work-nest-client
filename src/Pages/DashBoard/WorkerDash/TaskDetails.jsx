@@ -6,16 +6,18 @@ import Swal from "sweetalert2";
 import { FaCoins } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
 import { useState } from "react";
+import Loading from "../../../Components/Loading/Loading";
 
 const TaskDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+ const { user, loading: authLoading } = useAuth();
 const queryClient = useQueryClient();
 const [isSubmitting, setIsSubmitting] = useState(false);
   // Fetch single task
   const { data: task, isLoading: taskLoading } = useQuery({
     queryKey: ["task", id],
+    enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allTasks/${id}`);
       return res.data;
@@ -25,7 +27,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
   // Fetch submission for this task and user
   const { data: userSubmission, isLoading: submissionLoading } = useQuery({
     queryKey: ["submission", id, user?.email],
-    enabled: !!task && !!user,
+   enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(
         `/allSubmits/${task._id}/${user.email}`
@@ -77,7 +79,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
     e.target.reset();
   };
 
-  if (taskLoading) return <p className="text-center py-10">Loading task...</p>;
+  if (taskLoading) return <Loading></Loading>;
 
   const isButtonDisabled =
     submissionLoading || userSubmission?.submitted || isSubmitting || submissionMutation.isLoading;

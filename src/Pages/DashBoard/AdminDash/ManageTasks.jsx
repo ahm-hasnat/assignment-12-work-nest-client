@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { FaCoins, FaTasks } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
 import useAuth from "../../../Hooks/useAuth";
+import Loading from "../../../Components/Loading/Loading";
 
 const ManageTasks = () => {
   const { user, loading: authLoading } = useAuth();
@@ -52,7 +53,7 @@ const ManageTasks = () => {
     });
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading tasks...</p>;
+  if (isLoading) return <Loading></Loading>;
 
   return (
     <>
