@@ -34,7 +34,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
       );
 
       return res.data;
-      // Assuming API returns an array
+      
     },
   });
 
@@ -45,7 +45,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
       return res.data;
     },
      onMutate: () => {
-      setIsSubmitting(true); // ✅ disable immediately
+      setIsSubmitting(true); 
     },
     onSuccess: () => {
       Swal.fire("Submitted!", "Your submission has been sent.", "success");

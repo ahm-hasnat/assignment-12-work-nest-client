@@ -18,6 +18,7 @@ import {
   FaMoneyCheckAlt,
   FaMobileAlt,
   FaDollarSign,
+  FaTasks,
 } from "react-icons/fa";
 import { SiPaypal } from "react-icons/si";
 import useAuth from "../../../Hooks/useAuth";
@@ -28,7 +29,6 @@ const AdminHome = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
-  
 
   // Fetch all users
   const { data: allUsers = [] } = useQuery({
@@ -49,6 +49,15 @@ const AdminHome = () => {
       return res.data;
     },
   });
+  // Fetch all payments
+  const { data: allTasks = [] } = useQuery({
+    queryKey: ["allTasks"],
+    enabled: !!user && !authLoading,
+    queryFn: async () => {
+      const res = await axiosSecure.get("/allTasks");
+      return res.data;
+    },
+  });
 
   // Fetch all withdrawal requests
   const { data: allWithdraws = [] } = useQuery({
@@ -63,13 +72,13 @@ const AdminHome = () => {
   // Calculate metrics
   const totalWorkers = allUsers.filter((u) => u.role === "worker").length;
   const totalBuyers = allUsers.filter((u) => u.role === "buyer").length;
-  const totalCoins = allUsers.reduce((sum, u) => sum + (u.coins || 0), 0);
-  const totalPayments = allPayments.reduce(
-  (sum, p) => sum + (Number(p.price) || 0) + (Number(p.payment_amount) || 0),
-  0
-);
+  const totalTasks = allTasks.length;
+  const totalPaid = allPayments.reduce(
+    (sum, p) => sum + (Number(p.payment_amount) || 0),
+    0
+  );
   // Pie chart data
-  const total = totalWorkers + totalBuyers + totalCoins + totalPayments;
+  const total = totalWorkers + totalBuyers + totalTasks;
   const pieData = [
     { name: "Workers", value: (totalWorkers / total) * 100, icon: <FaUsers /> },
     {
@@ -77,18 +86,16 @@ const AdminHome = () => {
       value: (totalBuyers / total) * 100,
       icon: <FaUserShield />,
     },
-    { name: "Coins", value: (totalCoins / total) * 100, icon: <FaCoins /> },
     {
-      name: "Payments",
-      value: (totalPayments / total) * 100,
-      icon: <FaMoneyBillWave />,
+      name: "Tasks",
+      value: (totalTasks / total) * 100,
+      icon: <FaTasks />,
     },
   ];
 
   // Mutation to approve withdrawal
   const approveMutation = useMutation({
     mutationFn: async (withdraw) => {
-     
       // Update withdrawal status
       const res = await axiosSecure.put(`/allWithdraws/${withdraw._id}`, {
         status: "approved",
@@ -130,32 +137,40 @@ const AdminHome = () => {
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-3xl font-bold text-center mb-8">All Status</h2>
       {/* Metric Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-10">
-          <div className="p-4 bg-blue-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaUsers className="text-3xl text-blue-700" />
-            <p>Total Workers</p>
-            <p className="font-bold">{totalWorkers}</p>
-          </div>
-          <div className="p-4 bg-green-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaUserShield className="text-3xl text-green-700" />
-            <p>Total Buyers</p>
-            <p className="font-bold">{totalBuyers}</p>
-          </div>
-          <div className="p-4 bg-yellow-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaCoins className="text-3xl text-yellow-600" />
-            <p>Total Coins</p>
-            <p className="font-bold">{totalCoins}</p>
-          </div>
-          <div className="p-4 bg-orange-100 rounded-lg flex flex-col items-center justify-center gap-2">
-            <FaMoneyBillWave className="text-3xl text-orange-600" />
-            <p>Total Payments</p>
-            <p className="font-bold"><span className="flex justify-center items-center gap-1"><FaDollarSign className="text-blue-600"/>{totalPayments}</span></p>
-          </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-10">
+        <div className="p-4 bg-yellow-100 rounded-lg flex flex-col items-center justify-center gap-2">
+          <FaTasks className="text-3xl text-gray-600" />
+          <p>Total Tasks</p>
+          <p className="font-bold">{totalTasks}</p>
         </div>
+        <div className="p-4 bg-blue-100 rounded-lg flex flex-col items-center justify-center gap-2">
+          <FaUsers className="text-3xl text-blue-700" />
+          <p>Total Workers</p>
+          <p className="font-bold">{totalWorkers}</p>
+        </div>
+        <div className="p-4 bg-green-100 rounded-lg flex flex-col items-center justify-center gap-2">
+          <FaUserShield className="text-3xl text-green-700" />
+          <p>Total Buyers</p>
+          <p className="font-bold">{totalBuyers}</p>
+        </div>
+
+        <div className="p-4 bg-orange-100 rounded-lg flex flex-col items-center justify-center gap-2">
+          <FaMoneyBillWave className="text-3xl text-orange-600" />
+          <p>Total Paid</p>
+          <p className="font-bold">
+            <span
+              className="flex justify-center
+             items-center gap-1"
+            >
+              <FaDollarSign className="text-blue-600" />
+              {totalPaid}
+            </span>
+          </p>
+        </div>
+      </div>
 
       {/* Pie Chart */}
       <div className="bg-white p-5 rounded-xl shadow-lg mb-5">
-
         <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie
@@ -181,8 +196,6 @@ const AdminHome = () => {
             <Legend />
           </PieChart>
         </ResponsiveContainer>
-
-        
       </div>
 
       {/* Pending Withdrawals Table */}
@@ -191,7 +204,12 @@ const AdminHome = () => {
           Pending Withdrawals
         </h3>
         {pendingWithdraws.length === 0 ? (
-          <p className="text-center text-gray-500">No pending withdrawals</p>
+          <>
+            <p className="animate animate-bounce text-3xl text-center"> 🎉</p>
+            <p className=" text-center text-gray-500 font-medium py-6 ">
+              No pending withdrawals right now. All caught up!
+            </p>
+          </>
         ) : (
           <div className="overflow-x-auto rounded-xl shadow-lg">
             <table className="table table-zebra w-full text-center">
@@ -212,17 +230,17 @@ const AdminHome = () => {
                     <td>{idx + 1}</td>
                     <td>{w.worker_name}</td>
                     <td>
-                        <div className="flex justify-center items-center gap-1">
-                         <FaCoins className="text-yellow-500"></FaCoins>
-                           {w.withdrawal_coin}
-                        </div>
-                       </td>
+                      <div className="flex justify-center items-center gap-1">
+                        <FaCoins className="text-yellow-500"></FaCoins>
+                        {w.withdrawal_coin}
+                      </div>
+                    </td>
                     <td>
-                        <div className="flex justify-center items-center gap-1 badge badge-soft badge-info w-16">
-                         <FaDollarSign className="text-blue-600"></FaDollarSign>
+                      <div className="flex justify-center items-center gap-1 badge badge-soft badge-info w-16">
+                        <FaDollarSign className="text-blue-600"></FaDollarSign>
                         {w.withdrawal_amount}
-                        </div>
-                        </td>
+                      </div>
+                    </td>
                     <td>
                       <div className="flex justify-center items-center gap-1">
                         {getPaymentIcon(w.payment_system)}
