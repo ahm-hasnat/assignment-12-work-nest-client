@@ -9,23 +9,32 @@ export const useNotificationSocket = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [notifications, setNotifications] = useState([]);
+    const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    if (!user?.email) return;
-
-    // Initialize socket only once
-    if (!socket) {
-      socket = io("http://localhost:5000");
-
-      socket.on("connect", () => console.log("Socket connected:", socket.id));
-
-      socket.on("new_notification", (notification) => {
-        setNotifications((prev) => [notification, ...prev]);
-      });
+    if (!user?.email) {
+      // If no user, disconnect socket
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+      }
+      setNotifications([]);
+      return;
     }
 
+    const newSocket = io("http://localhost:5000");
+
+    newSocket.on("connect", () => console.log("Socket connected:", newSocket.id));
+
+    newSocket.on("new_notification", (notification) => {
+      setNotifications((prev) => [notification, ...prev]);
+    });
+
     // Join the user's room
-    socket.emit("join", user.email);
+    newSocket.emit("join", user.email);
+
+    setSocket(newSocket);
+
 
     // Fetch previous notifications
     const fetchNotifications = async () => {
@@ -39,10 +48,13 @@ export const useNotificationSocket = () => {
     fetchNotifications();
 
     return () => {
-      socket.off("new_notification");
-      socket.off("connect");
+      newSocket.off("new_notification");
+      newSocket.off("connect");
+      newSocket.disconnect();
     };
   }, [user?.email, axiosSecure]);
 
   return { notifications, setNotifications };
+
+  
 };

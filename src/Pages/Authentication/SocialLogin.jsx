@@ -1,59 +1,35 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router";
-
+import { useNavigate } from "react-router";
+import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const SocialLogin = () => {
-   const { signInWithGoogle, loading: authLoading } = useAuth();
-  const location = useLocation();
+  const { signInWithGoogle } = useAuth();
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
-  const from = location.state?.from || "/";
-  const axiosSecure = useAxiosSecure();
 
   const handleGoogleSignIn = async () => {
     try {
-      // 1️⃣ Sign in with Google
       const result = await signInWithGoogle();
       const user = result.user;
+      console.log("Firebase user:", user);
 
-      if (!user) throw new Error("Google login failed");
-
-      const payload = {
+      // Prepare user info for your DB
+      const userInfo = {
         name: user.displayName,
         email: user.email,
-        provider: "google",
         photoURL: user.photoURL,
         role: "worker",
         coins: 10,
         created_at: new Date().toISOString(),
+        last_log_in: new Date().toISOString(),
       };
 
-      // 2️⃣ Check if user exists in allUsers
-      let existingUser = null;
-      try {
-        const res = await axiosSecure.get(`/allUsers/${user.email}`);
-        existingUser = res.data;
-      } catch (err) {
-        // User not found → will create
-      }
+      // Send to backend (create or update handled on backend)
+      const res = await axiosInstance.post("/allUsers", userInfo);
+      console.log("User info saved:", res.data);
 
-      if (!existingUser) {
-        // New user → POST
-        await axiosSecure.post("/allUsers", payload);
-       
-        console.log("New user created in DB");
-      } else {
-        // Existing user → PATCH last_log_in only
-        await axiosSecure.patch(`/allUsers/${user.email}`, {
-          last_log_in: new Date().toISOString(),
-        });
-       
-        console.log("Existing user last_log_in updated");
-      }
-
-      // 3️⃣ Navigate after login
-      navigate(from);
+      navigate("/");
     } catch (error) {
       console.error("Google sign-in error:", error);
     }

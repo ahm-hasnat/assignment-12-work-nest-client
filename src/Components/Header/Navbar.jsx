@@ -23,7 +23,7 @@ const Navbar = () => {
 
  
   const coins = currentUser?.coins || 0;
-  console.log(currentUser);
+  // console.log(currentUser);
   const handleLogOut = () => {
     logOut()
       .then(() => {

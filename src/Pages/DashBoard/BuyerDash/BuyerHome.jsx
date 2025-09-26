@@ -76,7 +76,18 @@ const queryClient = useQueryClient();
   };
 
   const handleReject = (id) => {
-    rejectMutation.mutate(id);
+    Swal.fire({
+    title: "Are you sure?",
+    text: "Do you want to reject this submission?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, reject it!",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      rejectMutation.mutate(id);
+    }
+  });
   };
 
   // Stats calculations

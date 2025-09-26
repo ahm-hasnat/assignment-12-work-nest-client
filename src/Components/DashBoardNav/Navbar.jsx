@@ -22,7 +22,7 @@ const Navbar = () => {
       // assuming API returns array
     },
   });
-  console.log(userData);
+  // console.log(userData);
   return (
     <div
       className="flex justify-between items-center bg-white shadow-xs px-10 py-1 

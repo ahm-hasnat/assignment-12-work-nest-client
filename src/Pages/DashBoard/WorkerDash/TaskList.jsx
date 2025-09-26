@@ -24,9 +24,17 @@ const TaskList = () => {
   // Fetch tasks
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
-    enabled: !!user && !authLoading,  //
+    enabled: !!user && !authLoading, //
     queryFn: async () => {
       const res = await axiosSecure.get(`/allTasks`);
+      return res.data;
+    },
+  });
+  const { data: submission = [] } = useQuery({
+    queryKey: ["submission"],
+    enabled: !!user && !authLoading, //
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/mySubmits/${user.email}`);
       return res.data;
     },
   });
@@ -36,7 +44,10 @@ const TaskList = () => {
   }
 
   // Filter tasks where required_workers > 0
-  const availableTasks = tasks.filter((task) => task.required_workers > 0);
+  const availableTasks = tasks.filter(
+    (task) => task.currently_required_workers > 0
+  );
+  const submittedTasks = submission.filter((s) => s.status === "pending");
 
   const handleTaskDetails = (id) => {
     navigate(`/dashboard/task-details/${id}`);
@@ -54,13 +65,13 @@ const TaskList = () => {
         </motion.h2>
 
         {availableTasks.length === 0 ? (
-             <div className="flex flex-col items-center justify-center py-20">
+          <div className="flex flex-col items-center justify-center py-20">
             <Lottie
               animationData={noTasksAnimation}
               loop={true}
               className="w-96 h-96"
             />
-          <p className="text-center text-gray-500">No tasks available.</p>
+            <p className="text-center text-gray-500">No tasks available.</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -73,13 +84,19 @@ const TaskList = () => {
                 className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200"
               >
                 {/* Task image */}
-                {task.task_image_url && (
+                <div className="relative">
                   <img
                     src={task.task_image_url}
                     alt={task.task_title}
-                    className="w-full h-52 object-cover p-2 rounded-xl"
+                    className=" w-full h-52 object-cover p-2 rounded-xl"
                   />
-                )}
+                  {submittedTasks && (
+                    <span className="absolute top-1 right-2 badge badge-soft badge-success
+                      text-xs font-medium px-2 py-1 rounded-full">
+                      submitted
+                    </span>
+                  )}
+                </div>
 
                 {/* Task details */}
                 <div className="px-5 space-y-2">
