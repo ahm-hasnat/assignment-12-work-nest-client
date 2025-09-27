@@ -166,7 +166,7 @@ const Navbar = () => {
                   Register
                 </Link>
               </li>
-              
+             <span className="hidden lg:flex"> {dev()}</span>
 
             </ul>
               
