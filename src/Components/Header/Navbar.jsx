@@ -19,7 +19,6 @@ const Navbar = () => {
       const res = await axiosSecure.get(`/allUsers/${user.email}`);
       return res.data;
     },
-    
   });
 
   const coins = currentUser?.coins || 0;
@@ -74,23 +73,22 @@ const Navbar = () => {
   };
   const dev = () => {
     return (
-      <>
+      <ul><li>
         <a
           href="https://github.com/ahm-hasnat/assignment-12-work-nest-client"
           target="_blank"
           rel="noreferrer"
-          className="hidden md:flex btn btn1  items-center text-white text-sm"
+          className=" btn btn1  items-center text-white text-sm"
         >
           Join as Dev{" "}
           <span className=" text-lg font-extrabold">
             <MdArrowOutward />
           </span>
         </a>
-      </>
+      </li></ul>
+      
     );
   };
-
-
 
   return (
     <div className="navbar bg-base-100 shadow-sm py-1 px-3 md:px-10 fixed top-0 z-30">
@@ -124,6 +122,7 @@ const Navbar = () => {
              rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             {!user ? notUserNav() : <NavLinks />}
+            {dev()}
           </ul>
         </div>
         <Link to="/">
@@ -150,28 +149,37 @@ const Navbar = () => {
         <div className="flex gap-3">
           {!user ? (
             <>
-              <Link
-                to="/auth/login"
-                className="hidden md:flex btn btn2 btn-outline btn-success"
-              >
-                Login
-              </Link>
-              <Link
-                to="/auth/register"
-                className="hidden md:flex btn btn2 btn-outline btn-success"
-              >
-                Register
-              </Link>
-              {dev()}
+            <ul className="flex gap-3">
+              <li>
+                <Link
+                  to="/auth/login"
+                  className=" btn btn2 btn-outline btn-success"
+                >
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/auth/register"
+                  className=" btn btn2 btn-outline btn-success"
+                >
+                  Register
+                </Link>
+              </li>
+              
+
+            </ul>
+              
             </>
           ) : (
             <>
               <span className="flex items-center gap-1 px-2 py-1 text-yellow-700 rounded-lg font-semibold animate-pulse">
                 <FaCoins className="text-yellow-500" />
-                {!isLoading && currentUser ? currentUser.coins : "..."} <span className="hidden md:flex">Coins</span>
+                {!isLoading && currentUser ? currentUser.coins : "..."}{" "}
+                <span className="hidden md:flex">Coins</span>
               </span>
 
-              {dev()}
+              <span className="hidden lg:flex">{dev()}</span>
               <button
                 onClick={handleLogOut}
                 className="btn btn2 btn-outline btn-success"
