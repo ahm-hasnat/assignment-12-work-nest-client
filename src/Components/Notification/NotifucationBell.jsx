@@ -62,7 +62,7 @@ const NotificationBell = () => {
     <div
       ref={popupRef}
       onClick={(e) => e.stopPropagation()}
-      className="absolute -left-1 top-full mt-5 w-80 max-h-96 overflow-y-auto
+      className="absolute -left-6 md:-left-1 top-full mt-5 w-60 md:w-80 max-h-96 overflow-y-auto
                  bg-white shadow-xl border border-gray-200 rounded-lg z-50"
     >
       {notifications.length === 0 ? (
