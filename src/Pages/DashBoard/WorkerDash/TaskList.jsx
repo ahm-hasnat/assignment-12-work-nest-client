@@ -21,12 +21,11 @@ const TaskList = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
- 
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(6);
 
   const enabled = !!user && !authLoading;
-  
+
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     enabled,
@@ -45,17 +44,16 @@ const TaskList = () => {
   });
 
   console.log(submission);
-  
+
   const availableTasks = tasks.filter(
     (task) => task.currently_required_workers > 0
   );
 
- 
   const submittedTasks = submission.filter(
     (s) => s.status === "pending" || "approved" || "rejected"
   );
 
-  // Pagination logic
+  
   const indexOfLastTask = currentPage * cardsPerPage;
   const indexOfFirstTask = indexOfLastTask - cardsPerPage;
   const currentTasks = availableTasks.slice(indexOfFirstTask, indexOfLastTask);
@@ -63,17 +61,29 @@ const TaskList = () => {
   const totalPages = Math.max(
     Math.ceil(availableTasks.length / cardsPerPage),
     1
-  ); 
+  );
   const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
+  const delta = 2; 
+
+  const start = Math.max(2, currentPage - delta);
+  const end = Math.min(totalPages - 1, currentPage + delta);
+
+  pageNumbers.push(1); 
+
+  if (start > 2) pageNumbers.push("..."); 
+
+  for (let i = start; i <= end; i++) {
     pageNumbers.push(i);
   }
+
+  if (end < totalPages - 1) pageNumbers.push("..."); 
+
+  if (totalPages > 1) pageNumbers.push(totalPages); 
 
   const handleTaskDetails = (id) => {
     navigate(`/dashboard/task-details/${id}`);
   };
 
-  
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -183,16 +193,19 @@ const TaskList = () => {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
-                className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                className="px-2 py-0.5 md:px-3 md:py-1 text-xs md:text-sm rounded bg-gray-200 hover:bg-gray-300"
               >
                 Prev
               </button>
 
-              {pageNumbers.map((number) => (
+              {pageNumbers.map((number, idx) => (
                 <button
-                  key={number}
-                  onClick={() => setCurrentPage(number)}
-                  className={`px-3 py-1 rounded ${
+                  key={idx}
+                  onClick={() =>
+                    typeof number === "number" && setCurrentPage(number)
+                  }
+                  disabled={typeof number !== "number"} 
+                  className={`px-3 py-1 rounded text-xs ${
                     number === currentPage
                       ? "bg-green-300 text-black"
                       : "bg-gray-200"
@@ -205,19 +218,20 @@ const TaskList = () => {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                className="px-2 py-0.5 md:px-3 md:py-1 text-xs md:text-sm rounded
+                 bg-gray-200 hover:bg-gray-300"
               >
                 Next
               </button>
 
-              <div className="flex justify-end items-center ml-4">
+              <div className="flex justify-end items-center ml-2">
                 <select
                   value={cardsPerPage}
                   onChange={(e) => {
                     setCardsPerPage(Number(e.target.value));
-                    setCurrentPage(1); // reset to first page
+                    setCurrentPage(1);
                   }}
-                  className="border rounded px-2 py-1"
+                  className="border border-gray-300 rounded text-xs md:text-sm px-2 py-1"
                 >
                   <option value={6}>6</option>
                   <option value={12}>12</option>

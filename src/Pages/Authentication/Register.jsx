@@ -24,15 +24,15 @@ const Register = () => {
   const navigate = useNavigate();
   const from = location.state?.from || "/";
 
-  // Submit Handler
+ 
   const onSubmit = (data) => {
      if (uploading) return;
     createUser(data.email, data.password)
       .then(async (result) => {
-        // default coins by role
+       
         const defaultCoins = data.role === "worker" ? 10 : 50;
 
-        // save user in DB
+       
         const userInfo = {
           name: data.name,
           email: data.email,
@@ -43,10 +43,10 @@ const Register = () => {
           last_log_in: new Date().toISOString(),
         };
 
-        // Post to allUsers collection
+        
         await axiosInstance.post("/allUsers", userInfo);
 
-        // Update Firebase profile
+        
         const userProfile = {
           displayName: data.name,
           photoURL: profilePic,

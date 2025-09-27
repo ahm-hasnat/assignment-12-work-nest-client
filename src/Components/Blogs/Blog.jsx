@@ -32,7 +32,7 @@ const blogPosts = [
 const Blog = () => {
   return (
     <section id="blog" className="mb-16 max-w-6xl mx-auto px-5">
-      <h2 className="text-3xl font-bold text-center mb-12">Latest Blogs</h2>
+      <h2 className="text-3xl font-bold text-center mb-6 md:mb-12">Latest Blogs</h2>
 
       <div className="flex flex-col space-y-12">
         {blogPosts.map((post, index) => {
@@ -44,12 +44,12 @@ const Blog = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className={`flex flex-col md:flex-row items-center gap-16 p-8 pl-10
+              className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 p-8 pl-10
                 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50
               `}
             >
               {/* Blog Image */}
-              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36
+              <div className="flex-shrink-0  w-36 h-36
                rounded-full border-4 border-[#373c36] overflow-hidden">
                 <img
                   src={post.image}

@@ -21,12 +21,18 @@ const Sidebar = () => {
       : "text-gray-700 hover:text-green-600";
 
   return (
+    <>
+   
     <aside
-      className="fixed top-18 left-0 w-64 h-[calc(100vh-4rem)] bg-gray-100 
-    shadow-md p-4"
-    >
+  className={`
+    fixed top-12 md:top-16 lg:top-18 left-0 w-52 lg:w-60
+    h-full lg:h-[calc(100vh-4rem)] bg-gray-100 shadow-md p-4 z-50
+    transform transition-transform duration-300 
+   -translate-x-full lg:translate-x-0
+  `}
+>
       <h2 className="text-xl font-bold primary mb-3">Dashboard</h2>
-      <nav className="flex flex-col space-y-3 ml-5">
+      <nav className="flex flex-col space-y-3 ml-2 lg:ml-5">
         <NavLink to="/dashboard" className={activeLink} end>
           <div className="flex items-center gap-2">
             <Home className="w-5 h-5" />
@@ -60,7 +66,7 @@ const Sidebar = () => {
         )}
 
         {/* buyer */}
-        
+
         {!roleLoading && role === "buyer" && (
           <>
             <NavLink to="/dashboard/add-task" className={activeLink}>
@@ -111,6 +117,7 @@ const Sidebar = () => {
         )}
       </nav>
     </aside>
+    </>
   );
 };
 

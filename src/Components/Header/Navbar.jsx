@@ -8,20 +8,20 @@ import { FaCoins } from "react-icons/fa";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user, logOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
   const { data: currentUser = [], isLoading } = useQuery({
     queryKey: ["currentUser"],
+    enabled: !!user?.email && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/allUsers/${user.email}`);
       return res.data;
     },
-    enabled: !!user?.email, // only fetch if user is logged in
+    
   });
 
- 
   const coins = currentUser?.coins || 0;
   // console.log(currentUser);
   const handleLogOut = () => {
@@ -72,32 +72,34 @@ const Navbar = () => {
       </>
     );
   };
-  const dev = () =>{
+  const dev = () => {
     return (
       <>
-       <a
-            href="https://github.com/ahm-hasnat/assignment-12-work-nest-client"
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn1 flex items-center text-white text-sm"
-          >
-            Join as Dev
-            {" "}
-            <span className="text-lg font-extrabold">
-              <MdArrowOutward />
-            </span>
-          </a>
+        <a
+          href="https://github.com/ahm-hasnat/assignment-12-work-nest-client"
+          target="_blank"
+          rel="noreferrer"
+          className="hidden md:flex btn btn1  items-center text-white text-sm"
+        >
+          Join as Dev{" "}
+          <span className=" text-lg font-extrabold">
+            <MdArrowOutward />
+          </span>
+        </a>
       </>
     );
   };
+
+
+
   return (
-    <div className="navbar bg-base-100 shadow-sm py-1 px-10 fixed top-0 z-30">
+    <div className="navbar bg-base-100 shadow-sm py-1 px-3 md:px-10 fixed top-0 z-30">
       <div className="navbar-start">
         <div className="dropdown">
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost 
+            className="btn btn-ghost p-1
           lg:hidden"
           >
             <svg
@@ -126,8 +128,13 @@ const Navbar = () => {
         </div>
         <Link to="/">
           <div className="flex items-end">
-            <Logo></Logo>
-            <h1 className=" -ml-3 font-bold text-2xl p-0 primary">WorkNest</h1>
+            <span className="hidden md:flex">
+              <Logo></Logo>
+            </span>
+
+            <h1 className=" md:-ml-3 font-bold text-xl md:text-2xl p-0 primary">
+              WorkNest
+            </h1>
           </div>
         </Link>
       </div>
@@ -145,13 +152,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/auth/login"
-                className="btn btn2 btn-outline btn-success"
+                className="hidden md:flex btn btn2 btn-outline btn-success"
               >
                 Login
               </Link>
               <Link
                 to="/auth/register"
-                className="btn btn2 btn-outline btn-success"
+                className="hidden md:flex btn btn2 btn-outline btn-success"
               >
                 Register
               </Link>
@@ -159,13 +166,11 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <span
-                className="flex items-center gap-1 px-2 py-1 
-               text-yellow-700 rounded-lg font-semibold animate-pulse"
-              >
+              <span className="flex items-center gap-1 px-2 py-1 text-yellow-700 rounded-lg font-semibold animate-pulse">
                 <FaCoins className="text-yellow-500" />
-                {isLoading ? "..." : coins} Coins
+                {!isLoading && currentUser ? currentUser.coins : "..."} <span className="hidden md:flex">Coins</span>
               </span>
+
               {dev()}
               <button
                 onClick={handleLogOut}
@@ -179,16 +184,15 @@ const Navbar = () => {
                   alt={user.displayName}
                   className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-green-400"
                 />
-                <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-600 text-white
-                 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                <span
+                  className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-600 text-white
+                 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                >
                   {user.displayName}
                 </span>
               </div>
-              
             </>
           )}
-
-         
         </div>
       </div>
     </div>

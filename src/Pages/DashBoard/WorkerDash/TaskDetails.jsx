@@ -14,7 +14,7 @@ const TaskDetails = () => {
  const { user, loading: authLoading } = useAuth();
 const queryClient = useQueryClient();
 const [isSubmitting, setIsSubmitting] = useState(false);
-  // Fetch single task
+  
   const { data: task, isLoading: taskLoading } = useQuery({
     queryKey: ["task", id],
     enabled: !!user && !authLoading,
@@ -24,7 +24,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
     },
   });
 
-  // Fetch submission for this task and user
+  
   const { data: userSubmission, isLoading: submissionLoading } = useQuery({
     queryKey: ["submission", id, user?.email],
    enabled: !!user && !authLoading,
@@ -38,7 +38,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
     },
   });
 
-  // Mutation for submission
+  
   const submissionMutation = useMutation({
     mutationFn: async (submission) => {
       const res = await axiosSecure.post("/allSubmits", submission);

@@ -30,7 +30,7 @@ const AdminHome = () => {
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
 
-  // Fetch all users
+  
   const { data: allUsers = [] } = useQuery({
     queryKey: ["allUsers"],
     enabled: !!user && !authLoading,
@@ -40,7 +40,7 @@ const AdminHome = () => {
     },
   });
 
-  // Fetch all payments
+  
   const { data: allPayments = [] } = useQuery({
     queryKey: ["allPayments"],
     enabled: !!user && !authLoading,
@@ -49,7 +49,7 @@ const AdminHome = () => {
       return res.data;
     },
   });
-  // Fetch all payments
+  
   const { data: allTasks = [] } = useQuery({
     queryKey: ["allTasks"],
     enabled: !!user && !authLoading,
@@ -59,7 +59,7 @@ const AdminHome = () => {
     },
   });
 
-  // Fetch all withdrawal requests
+  
   const { data: allWithdraws = [] } = useQuery({
     queryKey: ["allWithdraws"],
     enabled: !!user && !authLoading,
@@ -69,7 +69,7 @@ const AdminHome = () => {
     },
   });
 
-  // Calculate metrics
+ 
   const totalWorkers = allUsers.filter((u) => u.role === "worker").length;
   const totalBuyers = allUsers.filter((u) => u.role === "buyer").length;
   const totalTasks = allTasks.length;
@@ -77,7 +77,7 @@ const AdminHome = () => {
     (sum, p) => sum + (Number(p.payment_amount) || 0),
     0
   );
-  // Pie chart data
+  
   const total = totalWorkers + totalBuyers + totalTasks;
   const pieData = [
     { name: "Workers", value: (totalWorkers / total) * 100, icon: <FaUsers /> },
@@ -93,10 +93,10 @@ const AdminHome = () => {
     },
   ];
 
-  // Mutation to approve withdrawal
+  
   const approveMutation = useMutation({
     mutationFn: async (withdraw) => {
-      // Update withdrawal status
+     
       const res = await axiosSecure.put(`/allWithdraws/${withdraw._id}`, {
         status: "approved",
       });
@@ -113,7 +113,7 @@ const AdminHome = () => {
     },
   });
 
-  // Helper: get payment system icon
+  
   const getPaymentIcon = (system) => {
     switch (system.toLowerCase()) {
       case "bkash":

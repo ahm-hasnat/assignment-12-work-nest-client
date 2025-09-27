@@ -10,7 +10,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../Firebase/firebase.config";
 import { AuthContext } from "./AuthContext";
-import { axiosSecure } from "../Hooks/useAxiosSecure";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -42,27 +41,18 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // console.log(currentUser.accessToken);
-        //  config.headers.Authorization = `Bearer ${user.accessToken}`;
-        axiosSecure.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${currentUser.accessToken}`;
-        // console.log(axiosSecure.defaults.headers.common[
-        //   "Authorization"
-        // ]);
-      }
+  const getAccessToken = async (forceRefresh = false) => {
+    if (!auth.currentUser) return null;
+    return await auth.currentUser.getIdToken(forceRefresh);
+  };
 
-      console.log("user in the auth state change", currentUser);
+    useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
     });
 
-    return () => {
-      unSubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {
@@ -73,6 +63,7 @@ const AuthProvider = ({ children }) => {
     signInWithGoogle,
     updateUserProfile,
     logOut,
+    getAccessToken,
   };
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;

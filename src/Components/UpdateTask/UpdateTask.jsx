@@ -21,7 +21,7 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
     },
   });
 
-  // Populate form with existing task data
+  
   useEffect(() => {
     if (task) {
       reset({
@@ -43,8 +43,8 @@ const UpdateTask = ({ task, isOpen, onClose, queryKey }) => {
       return res.data;
     },
     onSuccess: () => {
-      // Automatically refetch tasks to sync cache
-      queryClient.invalidateQueries(["tasks"]); // list of tasks
+     
+      queryClient.invalidateQueries(["tasks"]); 
       queryClient.invalidateQueries(["task", task._id]);
       Swal.fire("Success", "Task updated successfully", "success");
       onClose();

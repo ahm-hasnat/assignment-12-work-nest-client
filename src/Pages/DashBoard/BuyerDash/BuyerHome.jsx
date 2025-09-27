@@ -19,7 +19,7 @@ const BuyerHome = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading: authLoading } = useAuth();
 const queryClient = useQueryClient();
-  // Fetch buyer's tasks
+ 
   const { data: tasks = []  } = useQuery({
     queryKey: ["buyerTasks", user?.email],
      enabled: !!user && !authLoading,
@@ -30,8 +30,8 @@ const queryClient = useQueryClient();
     
   });
 
-  
-  // Fetch submissions for buyer's tasks
+
+
   const { data: submissions = [] } = useQuery({
     queryKey: ["buyerSubmissions", user?.email],
       enabled: !!user && !authLoading,
@@ -90,14 +90,14 @@ const queryClient = useQueryClient();
   });
   };
 
-  // Stats calculations
+ 
   const totalTasks = tasks.length;
   const totalWorkers = tasks.reduce(
     (sum, t) => sum + Number(t.currently_required_workers || 0),
     0
   );
   const totalPayment = submissions
-  .filter((s) => s.status === "approved") // only approved submissions
+  .filter((s) => s.status === "approved") 
   .reduce((sum, s) => sum + Number(s.payable_amount || 0), 0);
 
   const pendingCount = submissions.filter((s) => s.status === "pending").length;
@@ -113,8 +113,8 @@ const queryClient = useQueryClient();
   const approvedPercent = (approvedCount / totalSubmissions) * 100;
   const rejectedPercent = (rejectedCount / totalSubmissions) * 100;
 
-  // For payment progress bar
-  const maxPaymentCap = 1000; // example max, can be dynamic
+ 
+  const maxPaymentCap = 1000; 
   const paymentPercent = Math.min((totalPayment / maxPaymentCap) * 100, 100);
 
   return (

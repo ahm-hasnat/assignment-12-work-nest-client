@@ -21,7 +21,7 @@ const BestWorkers = () => {
   useEffect(() => {
     if (workers.length > 0) {
       setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 3000); // 3 seconds
+      const timer = setTimeout(() => setShowConfetti(false), 3000); 
       return () => clearTimeout(timer);
     }
   }, [workers]);
@@ -31,7 +31,7 @@ const BestWorkers = () => {
 
   return (
     <section className="py-10 px-5 max-w-6xl mx-auto relative">
-      {/* Confetti for top worker */}
+     
       {showConfetti && <Confetti recycle={false} numberOfPieces={150} />}
 
       <h2 className="text-3xl font-bold text-center mb-2 primary mt-5">

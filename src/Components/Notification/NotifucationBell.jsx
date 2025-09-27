@@ -22,7 +22,7 @@ const NotificationBell = () => {
   }, []);
 
    const markAsRead = async (e, notification) => {
-    e.stopPropagation(); // 🚀 prevents route navigation
+    e.stopPropagation(); 
     if (!notification.read) {
       await axiosSecure.patch(`/notifications/${notification._id}/read`);
       setNotifications((prev) =>
@@ -42,7 +42,7 @@ const NotificationBell = () => {
   };
 
   return (
-    <div className="relative inline-block"> {/* <-- make parent relative */}
+    <div className="relative inline-block"> 
   <FaBell
     className="text-xl mt-2 cursor-pointer hover:text-[#49ed2c] transition-colors duration-200"
     onClick={(e) => {
@@ -84,7 +84,7 @@ const NotificationBell = () => {
             {!n.read && (
                 <div className="flex mt-1">
                 <button
-                  onClick={(e) => markAsRead(e, n)} // stopPropagation passed
+                  onClick={(e) => markAsRead(e, n)} 
                   className="text-xs text-blue-600 hover:underline mt-1"
                 >
                   Mark as Read

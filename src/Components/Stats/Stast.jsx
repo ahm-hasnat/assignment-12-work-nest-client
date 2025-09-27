@@ -30,7 +30,7 @@ const statsData = [
   },
 ];
 
-// Helper function to format numbers
+
 const formatNumber = (num) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M+`;
   if (num >= 1000) return `${Math.floor(num / 1000)}K+`;
@@ -39,9 +39,9 @@ const formatNumber = (num) => {
 
 const Stats = () => {
   const calcDuration = (num) => {
-    if (num <= 1000) return 5;   // small numbers finish quick
-  if (num <= 10000) return 10;  // medium numbers
-  if (num <= 100000) return 15; // larger numbers
+    if (num <= 1000) return 5;   
+  if (num <= 10000) return 10;  
+  if (num <= 100000) return 15; 
   if (num <= 1000000) return 20; 
   return 25;  
   };

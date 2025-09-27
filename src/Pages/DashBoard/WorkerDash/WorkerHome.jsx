@@ -10,7 +10,7 @@ import Loading from "../../../Components/Loading/Loading";
 const WorkerHome = () => {
   const axiosSecure = useAxiosSecure();
    const { user, loading: authLoading } = useAuth();
-  // Fetch submissions for this worker
+ 
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ["workerSubmissions", user?.email],
      enabled: !!user && !authLoading,
@@ -33,7 +33,7 @@ const WorkerHome = () => {
   if (isLoading)
     return <Loading></Loading>;
 
-  // Stats
+  
   const approvedWithdrawals = withdrawals.filter(
     (w) => w.worker_email === user.email && w.status === "approved"
   );
@@ -42,12 +42,12 @@ const WorkerHome = () => {
     (sum, w) => sum + Number(w.withdrawal_amount || 0),
     0
   );
-  // Filter submissions for the current worker
+  
   const workerSubmissions = submissions.filter(
     (s) => s.worker_email === user?.email
   );
 
-  // Stats calculations
+  
   const totalSubmissions = workerSubmissions.length;
   const pendingCount = workerSubmissions.filter(
     (s) => s.status === "pending"
@@ -66,7 +66,7 @@ const WorkerHome = () => {
   const maxEarningsCap = 1000;
   const earningsPercent = Math.min((totalEarnings / maxEarningsCap) * 100, 100);
 
-  // Pie chart data
+  
   const pieData = [
     { name: "Pending", value: pendingCount },
     { name: "Approved", value: approvedCount },
@@ -100,7 +100,7 @@ const WorkerHome = () => {
     );
   };
 
-  // Filter approved submissions for the table
+ 
   const approvedSubmissions = submissions.filter(
     (s) => s.status === "approved"
   );
@@ -198,16 +198,16 @@ const WorkerHome = () => {
             className="bg-green-500 h-6 text-center text-white font-semibold"
             style={{ width: `${earningsPercent}%` }}
           >
-            ${totalEarnings}
+            ${totalWithdrawnAmount}
           </div>
         </div>
         <p className="mt-2 text-sm text-gray-600">
-          Earned ${totalEarnings} of ${maxEarningsCap}
+          Earned ${totalWithdrawnAmount} of ${maxEarningsCap}
         </p>
       </div>
 
       {/* Approved Submissions Table */}
-      <div className="p-6 bg-white rounded-2xl shadow">
+      <div className="p-6 bg-white rounded-2xl shadow overflow-x-auto">
         <h3 className="text-2xl font-semibold mb-4 text-center">
           Approved Submissions
         </h3>
@@ -235,7 +235,7 @@ const WorkerHome = () => {
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2 font-medium">{sub.task_title}</td>
                   <td>
-                    <div className="flex items-center justify-center gap-1 w-full">
+                    <div className="flex items-center justify-center gap-2 w-full">
                       <FaCoins className="text-yellow-500"></FaCoins>
                       {sub.payable_amount}
                     </div>

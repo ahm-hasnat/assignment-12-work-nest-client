@@ -14,7 +14,7 @@ const SocialLogin = () => {
       const user = result.user;
       console.log("Firebase user:", user);
 
-      // Prepare user info for your DB
+      
       const userInfo = {
         name: user.displayName,
         email: user.email,
@@ -25,7 +25,7 @@ const SocialLogin = () => {
         last_log_in: new Date().toISOString(),
       };
 
-      // Send to backend (create or update handled on backend)
+      
       const res = await axiosInstance.post("/allUsers", userInfo);
       console.log("User info saved:", res.data);
 

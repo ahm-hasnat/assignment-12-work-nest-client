@@ -28,10 +28,10 @@ const PaymentHistory = () => {
     },
   });
 
-  // Filter only (sorting removed)
+  
   const filteredPayments = useMemo(() => {
     return payments
-      .filter((p) => p.transactionId && p.transactionId.trim() !== "") // must have transactionId
+      .filter((p) => p.transactionId && p.transactionId.trim() !== "") 
       .filter(
         (p) =>
           p.packageName.toLowerCase().includes(search.toLowerCase()) ||
@@ -65,7 +65,7 @@ const PaymentHistory = () => {
         </div>
 
         {/* Table */}
-        <div className="shadow-lg rounded-xl border border-gray-200 overflow-hidden">
+        <div className="shadow-lg rounded-xl border border-gray-200 overflow-x-auto">
           <table className="min-w-full table-fixed text-center">
             <thead className="bg-green-600 text-white">
               <tr>
@@ -123,7 +123,7 @@ const PaymentHistory = () => {
                       {idx + 1}
                     </td>
 
-                    {/* Package with soft primary badge */}
+                   
                     <td className="px-6 py-5 text-sm text-gray-700">
                       <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
                         {payment.packageName}
@@ -131,7 +131,7 @@ const PaymentHistory = () => {
                     </td>
                     
 
-                    {/* Price with soft success badge */}
+                   
                     <td className="px-6 py-5 text-sm text-gray-700">
                       <span
                         className="inline-flex items-center justify-center gap-1 px-3 
@@ -142,7 +142,7 @@ const PaymentHistory = () => {
                         {payment.price}
                       </span>
                     </td>
-                    {/* Coins with warning badge */}
+                   
                     <td>
                       <div className="px-6 py-5 text-sm text-gray-700">
                         <span

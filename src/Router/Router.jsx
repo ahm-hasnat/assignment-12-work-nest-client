@@ -81,7 +81,7 @@ export const Router = createBrowserRouter([
       },
       {
         path:'/dashboard/payment-history',
-        element:<BuyerRoute><PaymentHistory></PaymentHistory>,</BuyerRoute>
+        element:<BuyerRoute><PaymentHistory></PaymentHistory></BuyerRoute>
       },
       // worker dashboard
       {

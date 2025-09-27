@@ -9,12 +9,12 @@ import { FiPlusCircle } from "react-icons/fi";
 import useAuth from "../../../Hooks/useAuth";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "../../../Components/Loading/Loading";
+
 
 const AddTask = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  
   const queryClient = useQueryClient();
 
   const [taskImage, setTaskImage] = useState("");
@@ -23,8 +23,8 @@ const AddTask = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
 
 
-  const { data: dbUser, isLoading: userLoading } = useQuery({
-  queryKey: ["buyer", user?.email], // email from auth or session
+  const { data: dbUser, } = useQuery({
+  queryKey: ["buyer", user?.email], 
   queryFn: async () => {
     const res = await axiosSecure.get(`/allUsers/${user.email}`);
     return res.data;
@@ -33,7 +33,7 @@ const AddTask = () => {
 });
 
 
-  // Upload image handler
+  
   const handleImageUpload = async (e) => {
     const image = e.target.files[0];
     if (!image) return;
@@ -56,17 +56,17 @@ const AddTask = () => {
     }
   };
 
-  // Mutation to add a new task
+  
   const addTaskMutation = useMutation({
     mutationFn: async (newTask) => {
       const res = await axiosSecure.post("/allTasks", newTask);
       return res.data;
     },
     onSuccess: async () => {
-      // Refetch user to get updated coins
+      
       await queryClient.invalidateQueries(["buyer", user.email]);
 
-      // Optionally, refetch tasks for this buyer
+      
       queryClient.invalidateQueries(["buyerTasks", user.email]);
 
       Swal.fire("Success", "Task added successfully", "success");
@@ -90,7 +90,7 @@ const AddTask = () => {
       required_workers: Number(data.required_workers),
       payable_amount: Number(data.payable_amount),
       task_image_url: taskImage,
-      added_By: dbUser.name, // from DB
+      added_By: dbUser.name, 
   buyer_email: dbUser.email,
     };
 

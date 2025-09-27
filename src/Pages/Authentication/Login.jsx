@@ -18,9 +18,9 @@ const Login = () => {
 
    const onSubmit = async (data) => {
   try {
-    // Attempt Firebase sign-in
+   
     const userCredential = await signIn(data.email, data.password);
-console.log(user);
+  // console.log(user);
     Swal.fire({
       icon: "success",
       title: "Login Successful",

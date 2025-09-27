@@ -9,7 +9,7 @@ import useAuth from "../../../Hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Payment = () => {
-  const { p, n,c, postalCode } = useParams(); // now expecting postalCode param
+  const { p, n,c, postalCode } = useParams(); 
    const queryClient = useQueryClient();
   const stripe = useStripe();
   const elements = useElements();
@@ -38,24 +38,24 @@ const Payment = () => {
     setLoading(true);
 
     try {
-      // 1️⃣ Get clientSecret from backend
+      
       const { data } = await axiosSecure.post("/create-payment-intent", {
-        amount: Number(p) * 100, // convert $ to cents
+        amount: Number(p) * 100, 
       });
 
       const clientSecret = data.clientSecret;
       const card = elements.getElement(CardElement);
       if (!card) throw new Error("Card element not found");
 
-      // 2️⃣ Confirm card payment
+     
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card,
           billing_details: {
-            name: user.displayName, // replace with actual user info if available
-            email: user.email, // replace with actual user email
+            name: user.displayName, 
+            email: user.email, 
             address: {
-              postal_code: postalCode || "", // ✅ include postal code
+              postal_code: postalCode || "", 
             },
           },
         },
@@ -66,7 +66,7 @@ const Payment = () => {
       } else if (result.paymentIntent?.status === "succeeded") {
         setErrorMsg("");
 
-        // 3️⃣ Save payment info to backend
+        
         await axiosSecure.post("/save-payment", {
             paid_by: user.displayName,
           email: user.email,
@@ -80,7 +80,7 @@ const Payment = () => {
 
          queryClient.invalidateQueries(["payments", user.email]);
 
-        // 4️⃣ Show success alert
+        
         await Swal.fire({
           icon: "success",
           title: "Payment Successful 🎉",
@@ -88,7 +88,7 @@ const Payment = () => {
           confirmButtonColor: "#16a34a",
         });
 
-        // 5️⃣ Redirect
+        
         navigate("/dashboard/purchase-coin");
       }
     } catch (err) {

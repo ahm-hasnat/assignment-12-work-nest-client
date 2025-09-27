@@ -6,7 +6,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Typewriter from "typewriter-effect";
 
-// Example slides (use local or external URLs)
+
 const slides = [
     {
     heading: "Work from Anywhere of the World",
@@ -17,7 +17,7 @@ const slides = [
   {
     heading: "Earn Money by Completing Micro Tasks",
     subHeading: "Join as a Worker and start earning from simple tasks instantly.",
-    image: "https://i.ibb.co.com/kgxsmc3j/findjob1.jpg", // or external URL
+    image: "https://i.ibb.co.com/kgxsmc3j/findjob1.jpg", 
    
   },
   

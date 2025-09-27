@@ -11,7 +11,7 @@ const MySubmissions = () => {
   const { user, loading: authLoading } = useAuth();
   const [statusFilter, setStatusFilter] = useState("");
 
-  // Fetch submissions for current user
+  
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ["mySubmissions", user?.email],
    enabled: !!user && !authLoading,
@@ -24,7 +24,7 @@ const MySubmissions = () => {
   if (isLoading)
     return <Loading></Loading>;
 
-  // Filter submissions by status
+  
   const filteredSubmissions = statusFilter
     ? submissions.filter((sub) => sub.status === statusFilter)
     : submissions;
@@ -51,7 +51,7 @@ const MySubmissions = () => {
             <option value="rejected">Rejected</option>
           </select>
         </div>
-        <div className="overflow-x-auto w-4xl mx-auto shadow-lg">
+        <div className="overflow-x-auto p-1 w-4xl mx-auto shadow-lg">
           <table className="table table-zebra text-center align-middle w-full">
             <thead>
               <tr className="bg-gray-100 text-start">
