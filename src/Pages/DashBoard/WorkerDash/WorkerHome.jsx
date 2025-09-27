@@ -106,12 +106,12 @@ const WorkerHome = () => {
   );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto mb-10">
+    <div className="md:p-6 p-2 max-w-6xl mx-auto mb-10">
       <h1 className="text-3xl font-bold mb-6 text-center">All status</h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div className="p-6 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
+        <div className="md:p-6 p-2 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
           <span className="flex items-center gap-1">
             <FaClipboardList className="text-blue-500 text-3xl" />
             <h3 className="text-gray-600 font-bold text-lg">
@@ -123,7 +123,7 @@ const WorkerHome = () => {
           </div>
         </div>
 
-        <div className="p-6 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
+        <div className="md:p-6 p-2 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
           <span className="flex items-center gap-1">
             <FaCoins className="text-yellow-500 text-3xl" />
             <h3 className="text-gray-600 font-bold text-lg">Total Earnings</h3>
@@ -132,7 +132,7 @@ const WorkerHome = () => {
             <p className="text-2xl font-bold">{totalEarnings}</p>
           </div>
         </div>
-        <div className="p-6 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
+        <div className="md:p-6 p-2 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
           <span className="flex items-center gap-2">
             <FaDollarSign className="text-green-500 text-3xl" />
             <h3 className="text-gray-600 font-bold text-lg">
@@ -146,7 +146,7 @@ const WorkerHome = () => {
       </div>
 
       {/* Submission Status PieChart */}
-      <div className="p-6 bg-white rounded-2xl shadow mb-10">
+      <div className="md:p-6 p-2 bg-white rounded-2xl shadow mb-10">
         <h3 className="text-lg font-semibold mb-6 text-center">
           Submission Status
         </h3>
@@ -191,7 +191,7 @@ const WorkerHome = () => {
       </div>
 
       {/* Earnings Progress Bar */}
-      <div className="p-6 bg-white rounded-2xl shadow mb-10">
+      <div className="md:p-6 p-2 bg-white rounded-2xl shadow mb-10">
         <h3 className="text-lg font-semibold mb-4">Earnings Progress</h3>
         <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
           <div
@@ -207,7 +207,7 @@ const WorkerHome = () => {
       </div>
 
       {/* Approved Submissions Table */}
-      <div className="p-6 bg-white rounded-2xl shadow overflow-x-auto">
+      <div className="md:p-6 p-2 bg-white rounded-2xl shadow overflow-x-auto">
         <h3 className="text-2xl font-semibold mb-4 text-center">
           Approved Submissions
         </h3>

@@ -31,7 +31,7 @@ const MySubmissions = () => {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto p-6 my-10 mb-10">
+      <div className="max-w-6xl mx-auto md:p-6 p-2 my-10 mb-10">
         <h2 className="text-3xl font-bold mb-5 text-center primary">
           My Submissions
         </h2>
