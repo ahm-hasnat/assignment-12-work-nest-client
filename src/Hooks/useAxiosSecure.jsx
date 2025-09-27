@@ -5,7 +5,7 @@ import useAuth from "./useAuth";
 
 
 export const axiosSecure = axios.create({
-  baseURL: "http://localhost:5000", 
+  baseURL: `https://assignment-12-work-nest-server.onrender.com`, 
 });
 
 const useAxiosSecure = () => {

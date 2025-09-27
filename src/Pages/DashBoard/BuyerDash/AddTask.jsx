@@ -49,7 +49,7 @@ const AddTask = () => {
       );
       setTaskImage(res.data.data.url);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       Swal.fire("Error", "Image upload failed", "error");
     } finally {
       setUploading(false);

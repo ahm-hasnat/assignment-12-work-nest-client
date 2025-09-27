@@ -62,7 +62,7 @@ const PurchaseCoin = () => {
      const handlePay = (p,n,c) => {
    
 
-    console.log(p,n,c);
+    // console.log(p,n,c);
     navigate(`/dashboard/payment/${p}/${n}/${c}`)
 }
 

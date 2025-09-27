@@ -22,7 +22,7 @@ export const useNotificationSocket = () => {
       return;
     }
 
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io(`https://assignment-12-work-nest-server.onrender.com`);
 
     newSocket.on("connect", () => console.log("Socket connected:", newSocket.id));
 
@@ -42,7 +42,7 @@ export const useNotificationSocket = () => {
         const res = await axiosSecure.get(`/notifications?toEmail=${user.email}`);
         setNotifications(res.data);
       } catch (err) {
-        console.error(err);
+        // console.error(err);
       }
     };
     fetchNotifications();

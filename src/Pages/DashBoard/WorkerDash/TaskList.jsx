@@ -43,7 +43,7 @@ const TaskList = () => {
     },
   });
 
-  console.log(submission);
+  // console.log(submission);
 
   const availableTasks = tasks.filter(
     (task) => task.currently_required_workers > 0

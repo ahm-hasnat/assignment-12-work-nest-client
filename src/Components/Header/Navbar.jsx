@@ -30,7 +30,7 @@ const Navbar = () => {
         navigate("/auth/login");
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
   // active link style

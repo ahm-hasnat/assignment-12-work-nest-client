@@ -92,7 +92,7 @@ const Payment = () => {
         navigate("/dashboard/purchase-coin");
       }
     } catch (err) {
-      console.error("Payment error:", err);
+      // console.error("Payment error:", err);
       setErrorMsg("Something went wrong. Please try again.");
     }
 

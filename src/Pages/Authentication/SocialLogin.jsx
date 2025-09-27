@@ -12,7 +12,7 @@ const SocialLogin = () => {
     try {
       const result = await signInWithGoogle();
       const user = result.user;
-      console.log("Firebase user:", user);
+      // console.log("Firebase user:", user);
 
       
       const userInfo = {
@@ -31,7 +31,7 @@ const SocialLogin = () => {
 
       navigate("/");
     } catch (error) {
-      console.error("Google sign-in error:", error);
+      // console.error("Google sign-in error:", error);
     }
   };
 
