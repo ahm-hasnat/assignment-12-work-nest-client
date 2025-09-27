@@ -44,7 +44,7 @@ const PaymentHistory = () => {
 
   return (
     <>
-      <div className="p-6 w-full max-w-6xl mx-auto mb-10">
+      <div className="md:p-6 p-2 w-full max-w-6xl mx-auto mb-10">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

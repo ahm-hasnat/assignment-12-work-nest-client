@@ -118,7 +118,7 @@ const queryClient = useQueryClient();
   const paymentPercent = Math.min((totalPayment / maxPaymentCap) * 100, 100);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto mb-10">
+    <div className="p-2 md:p-6 max-w-6xl mx-auto mb-10">
       <h1 className="text-3xl font-bold mb-6 text-center ">All Status</h1>
 
       {/* Stats Cards */}
@@ -131,7 +131,7 @@ const queryClient = useQueryClient();
           </div>
         </div>
         
-            <div className="p-6 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
+            <div className="md:p-6 p-2 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
           <span className="flex items-center gap-1"><FaUsers className="text-green-500 text-3xl" />
            <h3 className="text-gray-600 font-bold text-lg">Need Workers</h3></span>
           <div>
@@ -139,7 +139,7 @@ const queryClient = useQueryClient();
           </div>
           
         </div>
-            <div className="p-6 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
+            <div className="md:p-6 p-2 bg-white rounded-2xl shadow flex flex-col items-center gap-4">
           <span className="flex items-center gap-2"><FaCoins className="text-yellow-500 text-3xl" />
            <h3 className="text-gray-600 font-bold text-lg">Payment Done</h3></span>
           <div>
@@ -151,7 +151,7 @@ const queryClient = useQueryClient();
       </div>
 
       {/* Circular Progress for submissions */}
-      <div className="p-6 bg-white rounded-2xl shadow mb-10">
+      <div className="md:p-6 p-2 bg-white rounded-2xl shadow mb-10">
         <h3 className="text-lg font-semibold mb-6 text-center">
           Submission Status
         </h3>
@@ -196,7 +196,7 @@ const queryClient = useQueryClient();
       </div>
 
       {/* Payment Progress Bar */}
-      <div className="p-6 bg-white rounded-2xl shadow mb-10">
+      <div className="md:p-6 p-2 bg-white rounded-2xl shadow mb-10">
         <h3 className="text-lg font-semibold mb-4">Total Payment Progress</h3>
         <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
           <div
@@ -220,10 +220,10 @@ const queryClient = useQueryClient();
   </p>
        ) : (
       
-        <div className=" rounded-2xl shadow-lg mt-5">
+        <div className="overflow-x-auto rounded-2xl shadow-lg mt-5">
           
 
-          <table className="table table-zebra w-full">
+          <table className="table table-zebra ">
             <thead className="bg-gradient-to-r from-green-100 to-green-50">
               <tr>
                 <th className="text-gray-700">#</th>

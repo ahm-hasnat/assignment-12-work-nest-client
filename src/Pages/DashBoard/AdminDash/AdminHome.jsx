@@ -134,7 +134,7 @@ const AdminHome = () => {
   const pendingWithdraws = allWithdraws.filter((w) => w.status === "pending");
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto md:p-6 p-2">
       <h2 className="text-3xl font-bold text-center mb-8">All Status</h2>
       {/* Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-10">
@@ -199,7 +199,7 @@ const AdminHome = () => {
       </div>
 
       {/* Pending Withdrawals Table */}
-      <div className=" p-6 ">
+      <div className=" md:p-6 ">
         <h3 className="text-2xl font-semibold my-8 text-center">
           Pending Withdrawals
         </h3>

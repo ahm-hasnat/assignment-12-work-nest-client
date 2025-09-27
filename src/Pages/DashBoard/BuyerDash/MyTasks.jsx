@@ -85,7 +85,7 @@ const MyTasks = () => {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto p-5 rounded-2xl my-8">
+      <div className="max-w-6xl mx-auto md:p-5 p-2 rounded-2xl my-8">
         <h2 className="text-3xl font-bold mb-10 text-center text-gray-800">
           My <span className="text-green-600">Tasks</span>
         </h2>

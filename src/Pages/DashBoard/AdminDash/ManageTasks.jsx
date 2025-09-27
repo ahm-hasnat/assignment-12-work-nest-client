@@ -87,7 +87,7 @@ const ManageTasks = () => {
   return (
     <>
     
-    <div className="max-w-6xl mx-auto p-6 mb-8">
+    <div className="max-w-6xl mx-auto p-2 md:p-6 mb-8">
       <h2 className="text-3xl font-bold mb-8 mt-5 text-center">Manage Tasks</h2>
        
        {tasks.length === 0 ? (
