@@ -109,7 +109,7 @@ const MyTasks = () => {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="input input-bordered pr-10 w-96 text-center"
+                  className="input input-bordered pr-10 w-64 md:w-96 text-center"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
