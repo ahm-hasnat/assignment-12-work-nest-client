@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
-import { FaCoins } from "react-icons/fa";
+import { FaCoins, FaFlag } from "react-icons/fa";
 import Footer from "../../../Components/Footer/Footer";
 import { useState } from "react";
 import Loading from "../../../Components/Loading/Loading";
@@ -11,10 +11,10 @@ import Loading from "../../../Components/Loading/Loading";
 const TaskDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
- const { user, loading: authLoading } = useAuth();
-const queryClient = useQueryClient();
-const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const { user, loading: authLoading } = useAuth();
+  const queryClient = useQueryClient();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { data: task, isLoading: taskLoading } = useQuery({
     queryKey: ["task", id],
     enabled: !!user && !authLoading,
@@ -24,37 +24,56 @@ const [isSubmitting, setIsSubmitting] = useState(false);
     },
   });
 
-  
   const { data: userSubmission, isLoading: submissionLoading } = useQuery({
     queryKey: ["submission", id, user?.email],
-   enabled: !!user && !authLoading,
+    enabled: !!user && !authLoading,
     queryFn: async () => {
       const res = await axiosSecure.get(
         `/allSubmits/${task._id}/${user.email}`
       );
 
       return res.data;
-      
     },
   });
 
-  
   const submissionMutation = useMutation({
     mutationFn: async (submission) => {
       const res = await axiosSecure.post("/allSubmits", submission);
       return res.data;
     },
-     onMutate: () => {
-      setIsSubmitting(true); 
+    onMutate: () => {
+      setIsSubmitting(true);
     },
     onSuccess: () => {
       Swal.fire("Submitted!", "Your submission has been sent.", "success");
-     queryClient.invalidateQueries(["submission", id, user?.email]);
+      queryClient.invalidateQueries(["submission", id, user?.email]);
       queryClient.invalidateQueries(["task", id]);
     },
     onError: () => {
       Swal.fire("Error", "Something went wrong!", "error");
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
+    },
+  });
+
+  const reportMutation = useMutation({
+    mutationFn: async (reportData) => {
+      const res = await axiosSecure.post("/reports", reportData);
+      return res.data;
+    },
+    onSuccess: () => {
+      // Close the modal BEFORE showing alert
+      document.getElementById("report_modal").close();
+
+      // Show Swal AFTER modal closes
+      setTimeout(() => {
+        Swal.fire("Reported!", "Your report has been submitted.", "success");
+      }, 100);
+    },
+    onError: () => {
+      document.getElementById("report_modal").close();
+      setTimeout(() => {
+        Swal.fire("Error", "Failed to submit the report!", "error");
+      }, 100);
     },
   });
 
@@ -72,7 +91,6 @@ const [isSubmitting, setIsSubmitting] = useState(false);
       submission_details: submissionDetails,
       buyer_name: task.added_By,
       buyer_email: task.buyer_email,
-      
     };
 
     submissionMutation.mutate(submissionData);
@@ -82,8 +100,29 @@ const [isSubmitting, setIsSubmitting] = useState(false);
   if (taskLoading) return <Loading></Loading>;
 
   const isButtonDisabled =
-    submissionLoading || userSubmission?.submitted || isSubmitting || submissionMutation.isLoading;
+    submissionLoading ||
+    userSubmission?.submitted ||
+    isSubmitting ||
+    submissionMutation.isLoading;
 
+  const handleReportSubmit = async (e) => {
+    e.preventDefault();
+    const reason = e.target.report_reason.value;
+
+    const reportData = {
+      task_id: task._id,
+      task_title: task.task_title,
+      buyer_name: task.added_By,
+      buyer_email: task.buyer_email,
+      reported_by: user.email,
+      reported_by_name: user.displayName,
+      reason,
+      date: new Date().toISOString(),
+    };
+
+    reportMutation.mutate(reportData);
+    e.target.reset();
+  };
 
   return (
     <>
@@ -147,18 +186,70 @@ const [isSubmitting, setIsSubmitting] = useState(false);
             <button
               type="submit"
               disabled={submissionMutation.isLoading || isButtonDisabled}
-              className="btn btn1 w-full mt-3 "
+              className="btn btn1 mt-3 w-full"
             >
-             {isButtonDisabled
+              {isButtonDisabled
                 ? "Submitted"
                 : submissionMutation.isLoading
                 ? "Submitting..."
                 : "Submit Work"}
             </button>
+            {/* Report Button */}
+            <div className="text-center">
+              <div className="text-end">
+                <button
+                  type="button"
+                  onClick={() =>
+                    document.getElementById("report_modal").showModal()
+                  }
+                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-700 transition"
+                >
+                  <FaFlag className="text-red-400" />
+                  <span>Report this task</span>
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
       <Footer />
+
+      {/* Report Modal */}
+      {/* Report Modal */}
+      <dialog id="report_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg text-red-600 mb-2">Report Task</h3>
+          <p className="text-sm mb-4 text-gray-600">
+            Please describe why you are reporting this task. Reports are
+            reviewed by the admin.
+          </p>
+          <form
+            method="dialog"
+            onSubmit={handleReportSubmit}
+            className="space-y-3"
+          >
+            <textarea
+              name="report_reason"
+              required
+              placeholder="Enter your reason..."
+              className="textarea textarea-bordered w-full h-32"
+            ></textarea>
+
+            <div className="flex justify-end gap-3">
+              <button type="submit" className="btn btn-error">
+                Submit Report
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => document.getElementById("report_modal").close()}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </>
   );
 };
