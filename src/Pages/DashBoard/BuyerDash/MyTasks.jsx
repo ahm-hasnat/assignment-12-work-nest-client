@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import Footer from "../../../Components/Footer/Footer";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import { FaTrash, FaEdit, FaCoins, FaSearch } from "react-icons/fa";
@@ -9,6 +8,7 @@ import noTasksAnimation from "/src/assets/nodata.json";
 import { useMemo, useState } from "react";
 import UpdateTask from "../../../Components/UpdateTask/UpdateTask";
 import Loading from "../../../Components/Loading/Loading";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const MyTasks = () => {
   const [selectedTask, setSelectedTask] = useState(null); 
@@ -246,7 +246,7 @@ const MyTasks = () => {
         />
       </div>
 
-      <Footer></Footer>
+      <DashFooter />
     </>
   );
 };

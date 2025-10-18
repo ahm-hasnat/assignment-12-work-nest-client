@@ -39,15 +39,16 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-12 mb-8 text-center bg-gray-50">
-      <h1 className="text-3xl font-bold mb-12 primary">What Our Users Say</h1>
+    <section className="py-5  text-center bg-gray-50">
+      <h1 className="text-3xl font-bold mb-2 primary">What Our Users Say</h1>
+      <p className="mb-12 text-center secondary">Our users love the service our platform provides. Here's what they have to say</p>
 
       <Swiper
         modules={[Navigation, Autoplay]}
         navigation
         autoplay={{ delay: 4000, disableOnInteraction: false }}
         loop={true}
-        className="max-w-2xl mx-auto"
+        className="max-w-3xl mx-auto"
       >
         {testimonials.map(({ id, name, role, image, feedback, rating }) => (
           <SwiperSlide key={id}>

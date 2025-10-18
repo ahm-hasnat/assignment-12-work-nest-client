@@ -1,10 +1,10 @@
 import React from "react";
-import Footer from "../../../Components/Footer/Footer";
 import AdminHome from "../AdminDash/AdminHome";
-import useUserRole from "../../../Hooks/useUserRole"; // your custom hook
+import useUserRole from "../../../Hooks/useUserRole"; 
 import BuyerHome from "../BuyerDash/BuyerHome";
 import WorkerHome from "../WorkerDash/WorkerHome";
 import Loading from "../../../Components/Loading/Loading";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const DashHome = () => {
   const { role: userRole, roleLoading } = useUserRole();
@@ -24,7 +24,7 @@ const DashHome = () => {
       }
 
       <footer>
-        <Footer />
+        <DashFooter />
       </footer>
     </div>
   );

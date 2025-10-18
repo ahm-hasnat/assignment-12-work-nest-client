@@ -11,10 +11,10 @@ import {
   FaUsers,
   FaArrowRight,
 } from "react-icons/fa";
-import Footer from "../../../Components/Footer/Footer";
 import Lottie from "lottie-react";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const TaskList = () => {
   const { user, loading: authLoading } = useAuth();
@@ -242,7 +242,7 @@ const TaskList = () => {
           </>
         )}
       </div>
-      <Footer />
+      <DashFooter />
     </>
   );
 };

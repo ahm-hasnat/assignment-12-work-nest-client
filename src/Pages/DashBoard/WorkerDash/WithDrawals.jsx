@@ -3,8 +3,8 @@ import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import Footer from "../../../Components/Footer/Footer";
 import { FaCoins, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const Withdrawals = () => {
   const { user, loading: authLoading } = useAuth();
@@ -162,7 +162,7 @@ const Withdrawals = () => {
           </form>
         )}
       </div>
-      <Footer />
+      <DashFooter />
     </>
   );
 };

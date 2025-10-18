@@ -4,8 +4,8 @@ import { FaCoins } from "react-icons/fa";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
-import Footer from "../../../Components/Footer/Footer";
 import { useState } from "react";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const ManageUsers = () => {
   const { user, loading: authLoading } = useAuth();
@@ -174,7 +174,7 @@ const ManageUsers = () => {
           </table>
         </div>
       </div>
-      <Footer></Footer>
+      <DashFooter></DashFooter>
     </>
   );
 };

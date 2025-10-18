@@ -33,7 +33,7 @@ const statsData = [
 
 const formatNumber = (num) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M+`;
-  if (num >= 1000) return `${Math.floor(num / 1000)}K+`;
+  if (num >= 1000) return `${Math.floor(num / 1000)}k+`;
   return `${num}+`;
 };
 
@@ -58,11 +58,11 @@ const Stats = () => {
             transition={{ duration: 0.6, delay: id * 0.1 }}
             className="rounded-xl shadow-lg p-8 flex flex-col items-center
              transition-transform transform hover:-translate-y-2 hover:shadow-2xl
-                       bg-gradient-to-tr from-[#ffffff] to-[#dfcb842b]"
+                       bg-gradient-to-tr from-[#ffffff] to-green-50"
           >
             {icon}
             <motion.span
-              className="text-2xl md:text-3xl font-bold text-primary my-5 mb-2"
+              className="text-2xl md:text-3xl font-bold text-primary my-5 "
               animate={{ color: [ "#facc15", "#14b8a6", "#ec4899"] }}
               transition={{ repeat: Infinity, duration: 2.5 }}
             >
@@ -74,7 +74,7 @@ const Stats = () => {
                 formattingFn={formatNumber}
               />
             </motion.span>
-            <p className="secondary font-medium">{label}</p>
+            <p className="secondary font-medium text-sm">{label}</p>
           </motion.div>
         ))}
       </div>

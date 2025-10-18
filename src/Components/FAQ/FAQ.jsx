@@ -37,12 +37,12 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="mb-12 px-5 max-w-5xl mx-auto">
-      <h2 className="text-4xl font-bold text-center mb-12 primary">
+    <section id="faq" className="pt-5 px-5 max-w-3xl mx-auto">
+      <h2 className="text-3xl font-semibold text-center mb-2  primary">
         FAQ
       </h2>
-
-      <div className="space-y-4">
+      <p className="text-center secondary mb-9">Frequently asked questions about our platform.</p>
+      <div className="space-y-3">
         {faqData.map(({ id, question, answer }) => (
           <motion.div
             key={id}

@@ -10,8 +10,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
-import Footer from "../../../Components/Footer/Footer";
 import Loading from "../../../Components/Loading/Loading";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const PaymentHistory = () => {
   const axiosSecure = useAxiosSecure();
@@ -171,7 +171,7 @@ const PaymentHistory = () => {
           </table>
         </div>
       </div>
-      <Footer></Footer>
+      <DashFooter></DashFooter>
     </>
   );
 };

@@ -91,7 +91,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-sm py-1 px-3 md:px-10 fixed top-0 z-30">
+    <div className="navbar bg-base-100 shadow-sm py-1 px-3 md:px-19 fixed top-0 z-30">
       <div className="navbar-start">
         <div className="dropdown">
           <div

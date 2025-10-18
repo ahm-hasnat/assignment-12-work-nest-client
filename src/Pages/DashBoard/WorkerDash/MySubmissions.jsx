@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
-import Footer from "../../../Components/Footer/Footer";
 import { useState } from "react";
 import { FaCoins } from "react-icons/fa";
 import Loading from "../../../Components/Loading/Loading";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const MySubmissions = () => {
   const axiosSecure = useAxiosSecure();
@@ -113,7 +113,7 @@ const MySubmissions = () => {
           </table>
         </div>
       </div>
-      <Footer />
+      <DashFooter />
     </>
   );
 };

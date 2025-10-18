@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaCoins, FaSearch, FaTasks } from "react-icons/fa";
-import Footer from "../../../Components/Footer/Footer";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
 import { useMemo, useState } from "react";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const ManageTasks = () => {
   const { user, loading: authLoading } = useAuth();
@@ -172,8 +172,8 @@ const ManageTasks = () => {
        )}
        
     </div>
-    
-    <Footer></Footer>
+
+    <DashFooter></DashFooter>
     </>
   );
 };

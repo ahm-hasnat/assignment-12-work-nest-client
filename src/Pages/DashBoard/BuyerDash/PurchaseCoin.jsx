@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCoins, FaWallet } from "react-icons/fa";
-import Footer from "../../../Components/Footer/Footer";
 import { useNavigate } from "react-router";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 const coinPackages = [
   {
@@ -145,7 +145,7 @@ const PurchaseCoin = () => {
         </div>
       </div>
 
-      <Footer />
+      <DashFooter />
     </>
   );
 };

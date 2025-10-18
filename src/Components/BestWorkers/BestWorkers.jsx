@@ -48,10 +48,10 @@ const BestWorkers = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`relative bg-gradient-to-t from-green-100 to-white 
+            className={`relative bg-gradient-to-t from-green-50 to-white 
                 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 
                 transition-all duration-300 p-5 flex flex-col items-center ${
-                  index === 0 ? "border-3 border-green-400" : ""
+                  index === 0 ? "border-3 border-green-300" : ""
                 }`}
           >
             {/* Top Badge */}

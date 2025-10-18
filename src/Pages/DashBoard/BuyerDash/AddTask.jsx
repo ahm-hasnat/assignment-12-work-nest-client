@@ -2,13 +2,12 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import Footer from "../../../Components/Footer/Footer";
 import { FiPlusCircle } from "react-icons/fi";
 import useAuth from "../../../Hooks/useAuth";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import DashFooter from "../../../Components/DashFooter/DashFooter";
 
 
 const AddTask = () => {
@@ -225,7 +224,7 @@ const AddTask = () => {
         </form>
       </div>
 
-      <Footer />
+      <DashFooter />
     </div>
   );
 };
