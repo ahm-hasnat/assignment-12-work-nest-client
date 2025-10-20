@@ -37,7 +37,7 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="pt-5 px-5 max-w-3xl mx-auto">
+    <section id="faq" className=" px-5 max-w-3xl mx-auto py-16">
       <h2 className="text-3xl font-semibold text-center mb-2  primary">
         FAQ
       </h2>
@@ -46,7 +46,7 @@ const FAQ = () => {
         {faqData.map(({ id, question, answer }) => (
           <motion.div
             key={id}
-            className="bg-white shadow-md rounded-lg overflow-hidden"
+            className="bg-grey-50 shadow rounded-lg overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: id * 0.1 }}

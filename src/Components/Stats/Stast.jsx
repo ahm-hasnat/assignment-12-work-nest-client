@@ -47,7 +47,7 @@ const Stats = () => {
   };
 
   return (
-    <section className="my-16">
+    <section className="pb-16">
       <div className="max-w-6xl mx-auto px-5 grid grid-cols-1 sm:grid-cols-2
        md:grid-cols-4 gap-8 text-center ">
         {statsData.map(({ id, icon, number, label }) => (
@@ -56,7 +56,7 @@ const Stats = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: id * 0.1 }}
-            className="rounded-xl shadow-lg p-8 flex flex-col items-center
+            className="rounded-xl shadow p-8 flex flex-col items-center
              transition-transform transform hover:-translate-y-2 hover:shadow-2xl
                        bg-gradient-to-tr from-[#ffffff] to-green-50"
           >

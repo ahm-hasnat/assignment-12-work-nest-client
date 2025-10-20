@@ -1,18 +1,20 @@
 // src/Components/DashBoardNav/Navbar.jsx
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import Logo from "../Shared/logo";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAuth from "../../Hooks/useAuth";
 import NotificationBell from "../Notification/NotifucationBell";
 import Sidebar from "../DashSidebar/Sidebar";
+import NavProfile from "../Shared/NavProfile";
 
 const Navbar = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  
   
   const { data: userData = {} } = useQuery({
     queryKey: ["userData", user?.email],
@@ -23,6 +25,11 @@ const Navbar = () => {
       
     },
   });
+
+  
+
+  
+
   // console.log(userData);
   return (
     <>
@@ -104,15 +111,14 @@ const Navbar = () => {
                   src={user?.photoURL || "/default-avatar.png"}
                   alt="User"
                   className="w-10 h-10 rounded-full border-2 border-[#29d409] cursor-pointer"
-                />
+               onClick={() => setProfileModalOpen(!profileModalOpen)}
+               />
 
-                {/* Custom tooltip */}
-                <div
-                  className="absolute top-full -left-3 transform -translate-x-1/2 mt-2 
-                  hidden group-hover:block bg-gray-100 text-black text-xs rounded px-2 py-1 whitespace-nowrap"
-                >
-                  {user?.email}
-                </div>
+               
+                 {/* Profile Modal (same placement as NotificationBell) */}
+          {profileModalOpen && (
+           <NavProfile></NavProfile>
+          )}
               </div>
             </div>
           </div>

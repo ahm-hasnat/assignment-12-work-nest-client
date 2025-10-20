@@ -6,10 +6,12 @@ import NavLinks from "../Shared/Navlinks";
 import { useQuery } from "@tanstack/react-query";
 import { FaCoins } from "react-icons/fa";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import NavProfile from "../Shared/NavProfile";
+import { useState } from "react";
 
 const Navbar = () => {
-  const { user, logOut, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const axiosSecure = useAxiosSecure();
 
   const { data: currentUser = [], isLoading } = useQuery({
@@ -21,18 +23,7 @@ const Navbar = () => {
     },
   });
 
-  const coins = currentUser?.coins || 0;
-  // console.log(currentUser);
-  const handleLogOut = () => {
-    logOut()
-      .then(() => {
-        navigate("/auth/login");
-      })
-      .catch((error) => {
-        // console.log(error);
-      });
-  };
-  // active link style
+  
   const activeLink = ({ isActive }) =>
     isActive
       ? "text-[#29d409] font-semibold underline"
@@ -180,24 +171,18 @@ const Navbar = () => {
               </span>
 
               <span className="hidden lg:flex">{dev()}</span>
-              <button
-                onClick={handleLogOut}
-                className="btn btn2 btn-outline btn-success"
-              >
-                LogOut
-              </button>
+              
               <div className="relative group">
                 <img
                   src={user.photoURL || "/default-avatar.png"}
                   alt={user.displayName}
                   className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-green-400"
-                />
-                <span
-                  className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-600 text-white
-                 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  {user.displayName}
-                </span>
+                onClick={() => setProfileModalOpen(!profileModalOpen)}
+               />
+               {profileModalOpen && (
+           <NavProfile></NavProfile>
+          )}
+               
               </div>
             </>
           )}

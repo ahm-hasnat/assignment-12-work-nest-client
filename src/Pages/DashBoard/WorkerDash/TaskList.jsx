@@ -124,7 +124,7 @@ const TaskList = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     whileHover={{ scale: 1.02 }}
-                    className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200"
+                    className="bg-white shadow rounded overflow-hidden border border-gray-200"
                   >
                     {/* Task image */}
                     <div className="relative">
@@ -132,12 +132,12 @@ const TaskList = () => {
                         <img
                           src={task.task_image_url}
                           alt={task.task_title}
-                          className=" w-full h-52 object-cover p-2 rounded-xl"
+                          className=" w-full h-52 object-cover p-2 rounded"
                         />
                       )}
                       {isSubmitted && (
                         <span
-                          className="absolute top-1 right-2 badge badge-soft badge-success
+                          className="absolute top-0 right-1 badge badge-soft badge-success
                       text-xs font-medium px-2 py-1 rounded-full"
                         >
                           submitted
@@ -154,24 +154,24 @@ const TaskList = () => {
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaUser className="text-green-600" />
-                        <span>Buyer: {task.added_By}</span>
+                        <p> <span className="font-bold">Buyer:</span> {task.added_By}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaCalendarAlt className="text-blue-600" />
-                        <span>Complete by: {task.completion_date}</span>
+                        <p> <span className="font-bold">Complete by:</span> {task.completion_date}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaCoins className="text-yellow-500" />
-                        <span>Payment: {task.payable_amount}</span>
+                        <p> <span className="font-bold">Payment:</span> {task.payable_amount}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaUsers className="text-purple-600" />
-                        <span>
-                          Workers Needed: {task.currently_required_workers}
-                        </span>
+                        <p>
+                          <span className="font-bold">Workers Needed:</span> {task.currently_required_workers}
+                        </p>
                       </div>
 
                       <button

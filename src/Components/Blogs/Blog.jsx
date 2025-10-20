@@ -31,7 +31,7 @@ const blogPosts = [
 
 const Blog = () => {
   return (
-    <section id="blog" className="my-10 max-w-6xl mx-auto px-5">
+    <section id="blog" className=" max-w-6xl mx-auto px-5">
       <h2 className="text-3xl font-bold text-center mb-2">Latest Blogs</h2>
       <p className="text-center secondary mb-12">Stay updated with the latest tips and insights from our blog.</p>
       <div className="flex flex-col space-y-5">

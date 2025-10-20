@@ -100,7 +100,7 @@ const Register = () => {
   };
 
   return (
-    <div className="card bg-base-100 w-full max-w-lg mx-auto shadow-2xl mt-20 mb-12">
+    <div className="card bg-base-100 w-full max-w-lg mx-auto border-1 border-gray-50 shadow mt-20 mb-12">
       <div className="card-body">
         <h1 className="text-3xl font-bold text-center mb-4">Create Account</h1>
 

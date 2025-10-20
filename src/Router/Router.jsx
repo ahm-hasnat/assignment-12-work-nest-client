@@ -24,6 +24,11 @@ import AdminRoute from '../Routes/AdminRoutes';
 import BuyerRoute from '../Routes/BuyerRoute';
 import WorkerRoute from '../Routes/WorkerRoute';
 import Forbidden from '../Pages/Error/Forbidden';
+import profile from '../Layouts/profile';
+import Profile from '../Pages/Profile/Profile';
+
+
+
 
 export const Router = createBrowserRouter([
   {
@@ -38,6 +43,7 @@ export const Router = createBrowserRouter([
         }
     ]
   },
+ 
   {
 
   path:'/auth',
@@ -52,6 +58,16 @@ export const Router = createBrowserRouter([
       Component: Login,
     }
   ]
+  },
+  {
+    path:'/profile',
+    Component: profile,
+    children:[
+      {
+        index:true,
+        element:<PrivateRoute><Profile /></PrivateRoute>
+      }
+    ],
   },
   {
     path:'/dashboard',
