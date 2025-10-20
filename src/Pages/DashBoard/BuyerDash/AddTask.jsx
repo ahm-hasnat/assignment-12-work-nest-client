@@ -98,7 +98,7 @@ const AddTask = () => {
 
   return (
     <div>
-      <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow my-5 mb-20">
+      <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow my-5 mb-20">
         <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-2">
           <FiPlusCircle className="text-green-500" size={28} />
           Add New Task

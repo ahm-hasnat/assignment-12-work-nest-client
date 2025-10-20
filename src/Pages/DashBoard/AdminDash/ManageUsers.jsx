@@ -115,7 +115,7 @@ const ManageUsers = () => {
               <option value="worker">Worker</option>
             </select>
           </div>
-        <div className="overflow-x-auto shadow-lg rounded-lg">
+        <div className="overflow-x-auto shadow rounded">
           
 
           <table className="table table-zebra w-full text-center">

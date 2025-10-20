@@ -109,7 +109,7 @@ const Withdrawals = () => {
             Insufficient coin or All coins has been sent for withdrawal request. (Minimum {minCoins} coins required)
           </p>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto space-y-4 shadow-lg p-5 rounded-2xl">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto space-y-4 shadow p-5 rounded">
             <div>
               <label className="block font-medium mb-1">Coins to Withdraw</label>
               <input

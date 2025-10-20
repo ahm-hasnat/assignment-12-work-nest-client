@@ -60,12 +60,12 @@ const PaymentHistory = () => {
             placeholder="Search by package or transaction ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border rounded-lg shadow-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="px-4 py-2 border rounded-lg shadow w-full max-w-md focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
         {/* Table */}
-        <div className="shadow-lg rounded-xl border border-gray-200 overflow-x-auto">
+        <div className="shadow rounded border border-gray-200 overflow-x-auto">
           <table className="min-w-full table-fixed text-center">
             <thead className="bg-green-600 text-white">
               <tr>

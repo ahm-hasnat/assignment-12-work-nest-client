@@ -112,7 +112,7 @@ const Payment = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="p-4 border border-gray-300 rounded-lg focus-within:border-green-500">
+          <div className="p-4 border border-gray-300 rounded focus-within:border-green-500">
             <CardElement
               options={{
                 style: {

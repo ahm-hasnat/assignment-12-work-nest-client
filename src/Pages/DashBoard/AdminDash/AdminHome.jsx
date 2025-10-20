@@ -170,7 +170,7 @@ const AdminHome = () => {
       </div>
 
       {/* Pie Chart */}
-      <div className="bg-white p-5 rounded-xl shadow-lg mb-5">
+      <div className="bg-white p-5 rounded-xl shadow mb-5">
         <ResponsiveContainer width="100%" height={400}>
           <PieChart>
             <Pie

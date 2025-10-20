@@ -113,7 +113,7 @@ const ManageTasks = () => {
             <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
           </div>
         </div>
-      <div className="overflow-x-auto shadow-lg rounded-lg">
+      <div className="overflow-x-auto shadow-lg rounded">
         <table className="table table-zebra w-full text-center">
           <thead>
             <tr className="bg-green-100">
@@ -136,7 +136,7 @@ const ManageTasks = () => {
                   <img
                     src={task.task_image_url}
                     alt={task.task_title}
-                    className="w-16 h-12 rounded-lg object-cover mx-auto"
+                    className="w-16 h-12 rounded object-cover mx-auto"
                   />
                 </td>
                 <td>{task.task_title}</td>

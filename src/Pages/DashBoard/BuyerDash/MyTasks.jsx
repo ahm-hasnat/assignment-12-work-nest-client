@@ -85,7 +85,7 @@ const MyTasks = () => {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto md:p-5 p-2 rounded-2xl my-8">
+      <div className="max-w-6xl mx-auto md:p-5 p-2 rounded my-8">
         <h2 className="text-3xl font-bold mb-10 text-center text-gray-800">
           My <span className="text-green-600">Tasks</span>
         </h2>
@@ -116,7 +116,7 @@ const MyTasks = () => {
                 <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </div>
-            <div className="overflow-x-auto shadow-lg rounded-lg">
+            <div className="overflow-x-auto shadow rounded">
               <table className="table table-zebra w-full">
                 <thead className="bg-gradient-to-r from-green-100 to-green-50">
                   <tr>

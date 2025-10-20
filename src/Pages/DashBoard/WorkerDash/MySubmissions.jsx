@@ -51,7 +51,7 @@ const MySubmissions = () => {
             <option value="rejected">Rejected</option>
           </select>
         </div>
-        <div className="max-w-4xl mx-auto overflow-x-auto shadow-lg rounded-lg p-1">
+        <div className="max-w-4xl mx-auto overflow-x-auto shadow rounded p-1">
           <table className="table table-zebra text-center align-middle w-full">
             <thead>
               <tr className="bg-gray-100 text-start">

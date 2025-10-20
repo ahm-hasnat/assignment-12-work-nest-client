@@ -208,7 +208,7 @@ const WorkerHome = () => {
 
       {/* Approved Submissions Table */}
       <div className="md:p-6 p-2 bg-white rounded-2xl shadow overflow-x-auto">
-        <h3 className="text-2xl font-semibold mb-4 text-center">
+        <h3 className="text-xl font-semibold mb-4 text-center">
           Approved Submissions
         </h3>
         {approvedSubmissions.length === 0 ? (

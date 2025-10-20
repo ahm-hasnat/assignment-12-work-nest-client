@@ -4,13 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import noTasksAnimation from "/src/assets/nodata.json";
-import {
-  FaUser,
-  FaCalendarAlt,
-  FaCoins,
-  FaUsers,
-  FaArrowRight,
-} from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaCoins, FaUsers, FaArrowRight } from "react-icons/fa";
 import Lottie from "lottie-react";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
@@ -23,6 +17,7 @@ const TaskList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(6);
+  const [sortOrder, setSortOrder] = useState("default"); // default | high-to-low | low-to-high
 
   const enabled = !!user && !authLoading;
 
@@ -43,81 +38,81 @@ const TaskList = () => {
     },
   });
 
-  // console.log(submission);
+  // Filter tasks with available workers
+  const availableTasks = tasks.filter(task => task.currently_required_workers > 0);
 
-  const availableTasks = tasks.filter(
-    (task) => task.currently_required_workers > 0
-  );
+  // Apply sorting by payment
+  const sortedTasks = [...availableTasks].sort((a, b) => {
+    if (sortOrder === "high-to-low") return b.payable_amount - a.payable_amount;
+    if (sortOrder === "low-to-high") return a.payable_amount - b.payable_amount;
+    return 0; // default order
+  });
 
+  // Filter submitted tasks
   const submittedTasks = submission.filter(
-    (s) => s.status === "pending" || "approved" || "rejected"
+    s => s.status === "pending" || s.status === "approved" || s.status === "rejected"
   );
 
-  
   const indexOfLastTask = currentPage * cardsPerPage;
   const indexOfFirstTask = indexOfLastTask - cardsPerPage;
-  const currentTasks = availableTasks.slice(indexOfFirstTask, indexOfLastTask);
+  const currentTasks = sortedTasks.slice(indexOfFirstTask, indexOfLastTask);
 
-  const totalPages = Math.max(
-    Math.ceil(availableTasks.length / cardsPerPage),
-    1
-  );
+  const totalPages = Math.max(Math.ceil(sortedTasks.length / cardsPerPage), 1);
+
   const pageNumbers = [];
-  const delta = 2; 
-
+  const delta = 2;
   const start = Math.max(2, currentPage - delta);
   const end = Math.min(totalPages - 1, currentPage + delta);
 
-  pageNumbers.push(1); 
+  pageNumbers.push(1);
+  if (start > 2) pageNumbers.push("...");
+  for (let i = start; i <= end; i++) pageNumbers.push(i);
+  if (end < totalPages - 1) pageNumbers.push("...");
+  if (totalPages > 1) pageNumbers.push(totalPages);
 
-  if (start > 2) pageNumbers.push("..."); 
+  const handleTaskDetails = (id) => navigate(`/dashboard/task-details/${id}`);
 
-  for (let i = start; i <= end; i++) {
-    pageNumbers.push(i);
-  }
+  useEffect(() => window.scrollTo({ top: 0, behavior: "smooth" }), [currentPage]);
 
-  if (end < totalPages - 1) pageNumbers.push("..."); 
+  if (isLoading) return <Loading />;
 
-  if (totalPages > 1) pageNumbers.push(totalPages); 
-
-  const handleTaskDetails = (id) => {
-    navigate(`/dashboard/task-details/${id}`);
-  };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
   return (
     <>
       <div className="p-8 w-full max-w-6xl mx-auto mb-8">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-bold text-gray-800 mb-8 text-center"
+          className="text-3xl font-bold text-gray-800 mb-4 text-center"
         >
           Available Tasks
         </motion.h2>
 
-        {availableTasks.length === 0 ? (
+        {/* Sorting Control */}
+        <div className="flex justify-start mb-2">
+          <select
+            className="border border-gray-300 rounded px-2 py-1 text-xs"
+            value={sortOrder}
+            onChange={(e) => {
+              setSortOrder(e.target.value);
+              setCurrentPage(1);
+            }}
+          >
+            <option value="default">Sort by Default</option>
+            <option value="high-to-low">Payment: High → Low</option>
+            <option value="low-to-high">Payment: Low → High</option>
+          </select>
+        </div>
+
+        {sortedTasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
-            <Lottie
-              animationData={noTasksAnimation}
-              loop={true}
-              className="w-96 h-96"
-            />
+            <Lottie animationData={noTasksAnimation} loop={true} className="w-96 h-96" />
             <p className="text-center text-gray-500">No tasks available.</p>
           </div>
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentTasks.map((task) => {
-                const isSubmitted = submittedTasks.some(
-                  (s) => s.task_id === task._id
-                );
+                const isSubmitted = submittedTasks.some(s => s.task_id === task._id);
                 return (
                   <motion.div
                     key={task._id}
@@ -126,26 +121,21 @@ const TaskList = () => {
                     whileHover={{ scale: 1.02 }}
                     className="bg-white shadow rounded overflow-hidden border border-gray-200"
                   >
-                    {/* Task image */}
                     <div className="relative">
                       {task.task_image_url && (
                         <img
                           src={task.task_image_url}
                           alt={task.task_title}
-                          className=" w-full h-52 object-cover p-2 rounded"
+                          className="w-full h-52 object-cover p-2 rounded"
                         />
                       )}
                       {isSubmitted && (
-                        <span
-                          className="absolute top-0 right-1 badge badge-soft badge-success
-                      text-xs font-medium px-2 py-1 rounded-full"
-                        >
+                        <span className="absolute top-0 right-1 badge badge-soft badge-success text-xs font-medium px-2 py-1 rounded-full">
                           submitted
                         </span>
                       )}
                     </div>
 
-                    {/* Task details */}
                     <div className="px-5 space-y-2">
                       <h3 className="text-lg font-bold my-2 primary">
                         {task.task_title.split(" ").slice(0, 3).join(" ")}
@@ -154,30 +144,27 @@ const TaskList = () => {
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaUser className="text-green-600" />
-                        <p> <span className="font-bold">Buyer:</span> {task.added_By}</p>
+                        <p><span className="font-bold">Buyer:</span> {task.added_By}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaCalendarAlt className="text-blue-600" />
-                        <p> <span className="font-bold">Complete by:</span> {task.completion_date}</p>
+                        <p><span className="font-bold">Complete by:</span> {task.completion_date}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaCoins className="text-yellow-500" />
-                        <p> <span className="font-bold">Payment:</span> {task.payable_amount}</p>
+                        <p><span className="font-bold">Payment:</span> {task.payable_amount}</p>
                       </div>
 
                       <div className="flex items-center gap-2 text-gray-600 text-sm">
                         <FaUsers className="text-purple-600" />
-                        <p>
-                          <span className="font-bold">Workers Needed:</span> {task.currently_required_workers}
-                        </p>
+                        <p><span className="font-bold">Workers Needed:</span> {task.currently_required_workers}</p>
                       </div>
 
                       <button
                         onClick={() => handleTaskDetails(task._id)}
-                        className="text-[#29d409] hover:text-[#f8b02f] cursor-pointer mt-2 mb-5 w-fit rounded-xl mx-start flex items-center justify-center gap-2 
-                   transition"
+                        className="text-[#29d409] hover:text-[#f8b02f] cursor-pointer mt-2 mb-5 w-fit rounded-xl flex items-center gap-2 transition"
                       >
                         View Details <FaArrowRight />
                       </button>
@@ -187,8 +174,7 @@ const TaskList = () => {
               })}
             </div>
 
-            {/* Pagination controls */}
-
+            {/* Pagination */}
             <div className="flex justify-center gap-2 mt-10">
               <button
                 disabled={currentPage === 1}
@@ -197,40 +183,27 @@ const TaskList = () => {
               >
                 Prev
               </button>
-
               {pageNumbers.map((number, idx) => (
                 <button
                   key={idx}
-                  onClick={() =>
-                    typeof number === "number" && setCurrentPage(number)
-                  }
-                  disabled={typeof number !== "number"} 
-                  className={`px-3 py-1 rounded text-xs ${
-                    number === currentPage
-                      ? "bg-green-300 text-black"
-                      : "bg-gray-200"
-                  }`}
+                  onClick={() => typeof number === "number" && setCurrentPage(number)}
+                  disabled={typeof number !== "number"}
+                  className={`px-3 py-1 rounded text-xs ${number === currentPage ? "bg-green-300 text-black" : "bg-gray-200"}`}
                 >
                   {number}
                 </button>
               ))}
-
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-2 py-0.5 md:px-3 md:py-1 text-xs md:text-sm rounded
-                 bg-gray-200 hover:bg-gray-300"
+                className="px-2 py-0.5 md:px-3 md:py-1 text-xs md:text-sm rounded bg-gray-200 hover:bg-gray-300"
               >
                 Next
               </button>
-
               <div className="flex justify-end items-center ml-2">
                 <select
                   value={cardsPerPage}
-                  onChange={(e) => {
-                    setCardsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
+                  onChange={(e) => { setCardsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                   className="border border-gray-300 rounded text-xs md:text-sm px-2 py-1"
                 >
                   <option value={6}>6</option>

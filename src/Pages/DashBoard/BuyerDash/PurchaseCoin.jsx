@@ -83,7 +83,7 @@ const PurchaseCoin = () => {
           {coinPackages.map((pkg, idx) => (
             <div
               key={idx}
-              className="card w-xs shadow-md rounded-xl border border-gray-200 transition-transform transform hover:scale-105 duration-300"
+              className="card w-xs shadow rounded border border-gray-200 transition-transform transform hover:scale-105 duration-300"
             >
               <div className="card-body">
                 <div className="flex justify-between items-center">
