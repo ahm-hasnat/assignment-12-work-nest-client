@@ -175,7 +175,7 @@ const Profile = () => {
               <div className="flex gap-2">
                 <button
                   onClick={handleSave}
-                  className="btn btn-success flex items-center gap-2 justify-center"
+                  className="btn btn1 flex items-center gap-2 justify-center"
                 >
                   <FaSave /> Save
                 </button>
