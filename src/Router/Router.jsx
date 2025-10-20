@@ -40,6 +40,10 @@ export const Router = createBrowserRouter([
             index: true,
             path:'/',
             Component: Home,
+        },
+        {
+          path:'/all-tasks',
+          element: <TaskList></TaskList>,
         }
     ]
   },
@@ -107,7 +111,7 @@ export const Router = createBrowserRouter([
       },
       {
         path: '/dashboard/task-details/:id',
-        element: <WorkerRoute><TaskDetails></TaskDetails></WorkerRoute>
+        element: <PrivateRoute><TaskDetails></TaskDetails></PrivateRoute>
       },
     {
 

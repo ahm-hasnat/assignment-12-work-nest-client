@@ -6,10 +6,12 @@ import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
 import { useMemo, useState } from "react";
 import DashFooter from "../../../Components/DashFooter/DashFooter";
+import useAxios from "../../../Hooks/useAxios";
 
 const ManageTasks = () => {
   const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
 
@@ -18,7 +20,7 @@ const ManageTasks = () => {
     queryKey: ["allTasks"],
     enabled: !!user && !authLoading,  
     queryFn: async () => {
-      const res = await axiosSecure.get("/allTasks");
+      const res = await axiosInstance.get("/allTasks");
       return res.data;
     },
   });

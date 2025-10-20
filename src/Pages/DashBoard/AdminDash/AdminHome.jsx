@@ -22,11 +22,13 @@ import {
 } from "react-icons/fa";
 import { SiPaypal } from "react-icons/si";
 import useAuth from "../../../Hooks/useAuth";
+import useAxios from "../../../Hooks/useAxios";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const AdminHome = () => {
   const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
 
@@ -54,7 +56,7 @@ const AdminHome = () => {
     queryKey: ["allTasks"],
     enabled: !!user && !authLoading,
     queryFn: async () => {
-      const res = await axiosSecure.get("/allTasks");
+      const res = await axiosInstance.get("/allTasks");
       return res.data;
     },
   });

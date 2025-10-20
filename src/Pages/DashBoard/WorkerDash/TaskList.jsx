@@ -9,23 +9,25 @@ import Lottie from "lottie-react";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
 import DashFooter from "../../../Components/DashFooter/DashFooter";
+import useAxios from "../../../Hooks/useAxios";
 
 const TaskList = () => {
   const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
+  const isTasks = location.pathname === "/all-tasks";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(6);
-  const [sortOrder, setSortOrder] = useState("default"); // default | high-to-low | low-to-high
+  const [sortOrder, setSortOrder] = useState("default"); 
 
   const enabled = !!user && !authLoading;
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
-    enabled,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/allTasks`);
+      const res = await axiosInstance.get(`/allTasks`);
       return res.data;
     },
   });
@@ -78,7 +80,7 @@ const TaskList = () => {
 
   return (
     <>
-      <div className="p-8 w-full max-w-6xl mx-auto mb-8">
+      <div className={`p-6 w-full max-w-6xl mx-auto mb-8 ${!user && isTasks ? "mt-16" : ""}`}>
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -110,7 +112,7 @@ const TaskList = () => {
           </div>
         ) : (
           <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-6 `}>
               {currentTasks.map((task) => {
                 const isSubmitted = submittedTasks.some(s => s.task_id === task._id);
                 return (
@@ -215,7 +217,8 @@ const TaskList = () => {
           </>
         )}
       </div>
-      <DashFooter />
+      {user && <DashFooter />}
+      
     </>
   );
 };

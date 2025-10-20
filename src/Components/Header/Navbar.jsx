@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import Logo from "../Shared/logo";
 import { MdArrowOutward } from "react-icons/md";
 import useAuth from "../../Hooks/useAuth";
@@ -13,6 +13,9 @@ const Navbar = () => {
   const { user, loading: authLoading } = useAuth();
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const axiosSecure = useAxiosSecure();
+  const location = useLocation();
+const isHome = location.pathname === "/";
+
 
   const { data: currentUser = [], isLoading } = useQuery({
     queryKey: ["currentUser"],
@@ -37,7 +40,13 @@ const Navbar = () => {
             Home
           </NavLink>
         </li>
+        <li>
+          <NavLink className={activeLink} to="/all-tasks">
+            Tasks
+          </NavLink>
+        </li>
 
+         {isHome && (
         <li>
           <button
             onClick={() => {
@@ -54,6 +63,7 @@ const Navbar = () => {
             FAQ
           </button>
         </li>
+      )}
         <li>
           <NavLink className={activeLink} to="/about">
             About Us
@@ -82,7 +92,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-sm py-1 px-3 md:px-19 fixed top-0 z-30">
+   <div
+  className={`navbar bg-base-100 shadow-sm py-1 px-3 md:px-19 fixed top-0 z-30 
+    `}
+>
+
       <div className="navbar-start">
         <div className="dropdown">
           <div
