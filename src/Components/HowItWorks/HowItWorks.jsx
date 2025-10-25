@@ -31,7 +31,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="pt-16 " id="how-it-works">
+    <section className="pt-16 overflow-hidden" id="how-it-works">
       <div className="max-w-6xl mx-auto px-6 text-center">
         <motion.h2
           className="text-3xl  font-bold text-gray-800 mb-2"

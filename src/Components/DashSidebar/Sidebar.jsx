@@ -10,6 +10,7 @@ import {
   Wallet,
   User,
   ClipboardList,
+  AlertTriangle,
 } from "lucide-react";
 import useUserRole from "../../Hooks/useUserRole";
 
@@ -113,6 +114,12 @@ const Sidebar = () => {
                 <span>Manage Tasks</span>
               </div>
             </NavLink>
+             <NavLink to="/dashboard/manage-reports" className={activeLink}>
+      <div className="flex items-center gap-2">
+        <AlertTriangle className="w-5 h-5" />
+        <span>Manage Reports</span>
+      </div>
+    </NavLink>
           </>
         )}
       </nav>

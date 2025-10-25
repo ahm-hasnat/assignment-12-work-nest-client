@@ -53,7 +53,7 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-center mb-4">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email */}
-          <label className="label mb-2">Email</label>
+          <label className="label mb-2 primary">Email</label>
           <input
             type="email"
             {...register("email", { required: true })}
@@ -65,7 +65,7 @@ const Login = () => {
           )}
 
           {/* Password */}
-          <label className="label mb-2">Password</label>
+          <label className="label mb-2 primary">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -73,7 +73,7 @@ const Login = () => {
               className="input input-bordered w-full pr-10"
               placeholder="Password"
             />
-            <p className="text-xs text-gray-500 font-light hover:text-blue-500 mt-1
+            <p className="text-xs text-gray-700 font-light hover:text-blue-500 mt-1
             hover:underline cursor-pointer">Forgot password?</p>
             <span
               className="absolute right-3 top-5 -translate-y-1/2 cursor-pointer text-gray-600"

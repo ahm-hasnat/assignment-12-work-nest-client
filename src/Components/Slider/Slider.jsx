@@ -6,6 +6,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Typewriter from "typewriter-effect";
 import { motion } from "framer-motion";
+import { Link } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 const slides = [
   {
@@ -19,13 +21,15 @@ const slides = [
     image: "https://i.ibb.co.com/kgxsmc3j/findjob1.jpg",
   },
   {
-    heading: "Find Hundreds of micro Jobs Instant",
+    heading: "Find Hundreds of Micro Jobs Instantly",
     subHeading: "Explore a wide variety of tasks and pick what suits you best.",
     image: "https://i.ibb.co.com/DHkww3NP/findjob.jpg",
   },
 ];
 
 const Slider = () => {
+
+  const { user } = useAuth();
   return (
     <div className="max-w-full mt-18">
       <Swiper
@@ -56,10 +60,7 @@ const Slider = () => {
                   className="mb-5 text-left"
                   style={{ minWidth: "550px" }}
                 >
-                  <h1
-                    className="text-3xl md:text-4xl font-heading font-bold mx-auto  text-white"
-                    
-                  >
+                  <h1 className="text-3xl md:text-4xl font-heading font-bold mx-auto text-white">
                     <Typewriter
                       options={{
                         strings: [slide.heading],
@@ -71,7 +72,21 @@ const Slider = () => {
                     />
                   </h1>
                 </motion.div>
-                <p className=" font-body text-[#ffffffee]">{slide.subHeading}</p>
+                <p className="font-body text-[#ffffffee] mb-6">{slide.subHeading}</p>
+
+                
+                <motion.div
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                >
+                  <Link
+                    to={user ? "/dashboard/all-task" : "/all-tasks"}
+                    className="btn btn1 text-white font-semibold px-6 py-3 rounded shadow-none border-0 transition-all duration-300"
+                  >
+                    Get Started
+                  </Link>
+                </motion.div>
               </div>
             </div>
           </SwiperSlide>

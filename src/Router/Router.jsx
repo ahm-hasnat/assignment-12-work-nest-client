@@ -26,6 +26,8 @@ import WorkerRoute from '../Routes/WorkerRoute';
 import Forbidden from '../Pages/Error/Forbidden';
 import profile from '../Layouts/profile';
 import Profile from '../Pages/Profile/Profile';
+import ManageReports from '../Pages/DashBoard/AdminDash/ManageReports';
+import ReportDetails from '../Pages/DashBoard/AdminDash/ReportDetails';
 
 
 
@@ -132,6 +134,14 @@ export const Router = createBrowserRouter([
   {
     path:'/dashboard/manage-task',
     element:<AdminRoute><ManageTasks></ManageTasks></AdminRoute>
+  },
+  {
+    path: '/dashboard/manage-reports',
+    element: <AdminRoute><ManageReports></ManageReports></AdminRoute>
+  },
+  {
+    path: '/dashboard/report-details/:id',
+    element: <AdminRoute><ReportDetails></ReportDetails></AdminRoute>
   }
 
     ]
