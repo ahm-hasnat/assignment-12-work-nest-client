@@ -26,31 +26,36 @@ const useAxiosSecure = () => {
     );
 
     
-    const responseInterceptor = axiosSecure.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const status = error.response?.status;
+   const responseInterceptor = axiosSecure.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error.response?.status;
 
-        if (status === 403) {
-          
-          navigate("/forbidden", { replace: true });
-        } else if (status === 401) {
-          
-          try {
-            const token = await getAccessToken(true); 
-            if (token) {
-              error.config.headers.Authorization = `Bearer ${token}`;
-              return axiosSecure(error.config); 
-            }
-          } catch {
-            await logOut(); 
-            navigate("/auth/login", { replace: true });
-          }
-        }
-
-        return Promise.reject(error);
+    if (status === 403) {
+    
+      if (user) {
+        navigate("/forbidden", { replace: true });
+      } else {
+       
+        console.warn("403 received after logout, ignoring redirect.");
       }
-    );
+    } else if (status === 401) {
+      try {
+        const token = await getAccessToken(true); 
+        if (token) {
+          error.config.headers.Authorization = `Bearer ${token}`;
+          return axiosSecure(error.config);
+        }
+      } catch {
+        await logOut();
+        navigate("/auth/login", { replace: true });
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 
     return () => {
       axiosSecure.interceptors.request.eject(requestInterceptor);
